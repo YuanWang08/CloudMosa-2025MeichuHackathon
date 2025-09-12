@@ -3,21 +3,30 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <h1>This is the home page</h1>
-
-      <nav>
-        <RouterLink to="/" class="text-red-500">Home</RouterLink>
-        <RouterLink to="/broadcast">broadcast</RouterLink>
-        <RouterLink to="/chat">chat</RouterLink>
-      </nav>
+  <!-- Centered phone viewport 240x320 -->
+  <div
+    class="phone-frame size-qvga shadow-xl bg-black border border-neutral-700"
+    role="application"
+    aria-label="App viewport 240x320"
+  >
+    <div class="phone-viewport bg-white flex flex-col">
+      <header class="shrink-0 p-2 text-center text-xs text-neutral-600 bg-neutral-100 border-b">
+        <nav class="flex items-center justify-center gap-3 truncate">
+          <RouterLink to="/" class="hover:underline">Home</RouterLink>
+          <RouterLink to="/broadcast" class="hover:underline">Broadcast</RouterLink>
+          <RouterLink to="/chat" class="hover:underline">Chat</RouterLink>
+        </nav>
+      </header>
+      <main class="flex-1 min-h-0 overflow-hidden text-black">
+        <RouterView />
+      </main>
     </div>
-  </header>
-
-  <RouterView />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.phone-viewport {
+  width: var(--phone-w);
+  height: var(--phone-h);
+}
+</style>

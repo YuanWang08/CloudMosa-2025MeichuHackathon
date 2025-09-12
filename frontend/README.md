@@ -1,3 +1,26 @@
+# Frontend
+
+此前端已預設：
+
+- 使用 Tailwind CSS v4 via Vite 外掛
+- index.html 以灰底置中顯示 240x320 App 視窗
+- `App.vue` 內建立固定 240x320 的應用視窗容器，方便日後以 flex column 填入頁面
+
+開發：
+
+```
+npm run dev
+```
+
+建置：
+
+```
+npm run build
+npm run preview
+```
+
+備註：如果要支援 128x160，可在 `App.vue` 中以條件 class 或路由層級切換不同 viewport 尺寸。
+
 # frontend
 
 This template should help get you started developing with Vue 3 in Vite.

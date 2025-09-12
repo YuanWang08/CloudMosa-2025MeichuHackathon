@@ -1,1 +1,40 @@
 @import 'tailwindcss';
+
+/* App defaults */
+:root {
+  color-scheme: light dark;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+/* On desktop, our index.html already centers the viewport with gray bg */
+body {
+  margin: 0;
+}
+
+/* Utility to ensure no accidental scrollbars inside the 240x320 viewport */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Phone viewport sizing helpers */
+:root {
+  --phone-w: 240px; /* default QVGA */
+  --phone-h: 320px;
+}
+.size-qvga {
+  --phone-w: 240px;
+  --phone-h: 320px;
+}
+.size-qqvga {
+  --phone-w: 128px;
+  --phone-h: 160px;
+}
