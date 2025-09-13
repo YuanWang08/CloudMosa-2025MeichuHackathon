@@ -73,7 +73,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
         Code: <span class="font-mono">{{ chCode || '------' }}</span>
       </div>
     </div>
-    <div ref="listRef" tabindex="0" class="flex-1 p-2 pt-0 text-sm overflow-auto outline-none">
+    <div ref="listRef" tabindex="0" class="flex-1 content-scroll p-2 pt-0 text-sm outline-none">
       <div v-if="loading" class="opacity-80">Loading…</div>
       <div v-else-if="error" class="text-red-200">{{ error }}</div>
       <div v-else class="space-y-3">

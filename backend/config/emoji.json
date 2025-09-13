@@ -1,0 +1,716 @@
+{
+  "categories": [
+    {
+      "id": "faces",
+      "name": "表情",
+      "items": [
+        {
+          "id": "smile",
+          "emoji": "😀",
+          "fallback": ":)"
+        },
+        {
+          "id": "grin",
+          "emoji": "😁",
+          "fallback": ":D"
+        },
+        {
+          "id": "joy",
+          "emoji": "😂",
+          "fallback": ":'D"
+        },
+        {
+          "id": "love_eyes",
+          "emoji": "😍",
+          "fallback": "<3"
+        },
+        {
+          "id": "kiss",
+          "emoji": "😘",
+          "fallback": ":*"
+        },
+        {
+          "id": "thinking",
+          "emoji": "🤔",
+          "fallback": "[think]"
+        },
+        {
+          "id": "sad",
+          "emoji": "😢",
+          "fallback": ":("
+        },
+        {
+          "id": "cry",
+          "emoji": "😭",
+          "fallback": "T_T"
+        },
+        {
+          "id": "angry",
+          "emoji": "😡",
+          "fallback": ">:("
+        },
+        {
+          "id": "surprise",
+          "emoji": "😱",
+          "fallback": "[shock]"
+        },
+        {
+          "id": "sleep",
+          "emoji": "😴",
+          "fallback": "[zzz]"
+        },
+        {
+          "id": "cool",
+          "emoji": "😎",
+          "fallback": "B)"
+        },
+        {
+          "id": "wink",
+          "emoji": "😉",
+          "fallback": ";)"
+        },
+        {
+          "id": "yum",
+          "emoji": "😋",
+          "fallback": "[yum]"
+        },
+        {
+          "id": "blush",
+          "emoji": "😊",
+          "fallback": "^_^"
+        },
+        {
+          "id": "neutral",
+          "emoji": "😐",
+          "fallback": ":-|"
+        },
+        {
+          "id": "expressionless",
+          "emoji": "😶",
+          "fallback": "[blank]"
+        },
+        {
+          "id": "rolling_eyes",
+          "emoji": "🙄",
+          "fallback": "[eyeroll]"
+        },
+        {
+          "id": "relieved",
+          "emoji": "😌",
+          "fallback": "[relief]"
+        },
+        {
+          "id": "star_struck",
+          "emoji": "🤩",
+          "fallback": "[star]"
+        },
+        {
+          "id": "drool",
+          "emoji": "🤤",
+          "fallback": "[drool]"
+        },
+        {
+          "id": "sick",
+          "emoji": "🤢",
+          "fallback": "[sick]"
+        },
+        {
+          "id": "mask",
+          "emoji": "😷",
+          "fallback": "[mask]"
+        },
+        {
+          "id": "hot",
+          "emoji": "🥵",
+          "fallback": "[hot]"
+        },
+        {
+          "id": "cold",
+          "emoji": "🥶",
+          "fallback": "[cold]"
+        },
+        {
+          "id": "confused",
+          "emoji": "😕",
+          "fallback": "[confused]"
+        },
+        {
+          "id": "fearful",
+          "emoji": "😨",
+          "fallback": "[afraid]"
+        },
+        {
+          "id": "pensive",
+          "emoji": "😔",
+          "fallback": "[sad]"
+        },
+        {
+          "id": "shushing",
+          "emoji": "🤫",
+          "fallback": "[quiet]"
+        },
+        {
+          "id": "mind_blown",
+          "emoji": "🤯",
+          "fallback": "[shock]"
+        }
+      ]
+    },
+    {
+      "id": "gestures",
+      "name": "手勢",
+      "items": [
+        {
+          "id": "thumbs_up",
+          "emoji": "👍",
+          "fallback": "[OK]"
+        },
+        {
+          "id": "thumbs_down",
+          "emoji": "👎",
+          "fallback": "[NO]"
+        },
+        {
+          "id": "fist",
+          "emoji": "👊",
+          "fallback": "[fist]"
+        },
+        {
+          "id": "raised_fist",
+          "emoji": "✊",
+          "fallback": "[fist_up]"
+        },
+        {
+          "id": "handshake",
+          "emoji": "🤝",
+          "fallback": "[deal]"
+        },
+        {
+          "id": "clap",
+          "emoji": "👏",
+          "fallback": "[clap]"
+        },
+        {
+          "id": "raise_hands",
+          "emoji": "🙌",
+          "fallback": "[hooray]"
+        },
+        {
+          "id": "open_hands",
+          "emoji": "👐",
+          "fallback": "[open]"
+        },
+        {
+          "id": "raised_hand",
+          "emoji": "✋",
+          "fallback": "[stop]"
+        },
+        {
+          "id": "raised_backhand",
+          "emoji": "🤚",
+          "fallback": "[backhand]"
+        },
+        {
+          "id": "hand_splayed",
+          "emoji": "🖐️",
+          "fallback": "[hand]"
+        },
+        {
+          "id": "ok_hand",
+          "emoji": "👌",
+          "fallback": "[ok]"
+        },
+        {
+          "id": "victory",
+          "emoji": "✌️",
+          "fallback": "V"
+        },
+        {
+          "id": "fingers_crossed",
+          "emoji": "🤞",
+          "fallback": "[luck]"
+        },
+        {
+          "id": "love_you_gesture",
+          "emoji": "🤟",
+          "fallback": "[love]"
+        },
+        {
+          "id": "metal",
+          "emoji": "🤘",
+          "fallback": "[rock]"
+        },
+        {
+          "id": "call_me",
+          "emoji": "🤙",
+          "fallback": "[call]"
+        },
+        {
+          "id": "point_up",
+          "emoji": "👆",
+          "fallback": "[up]"
+        },
+        {
+          "id": "point_down",
+          "emoji": "👇",
+          "fallback": "[down]"
+        },
+        {
+          "id": "point_right",
+          "emoji": "👉",
+          "fallback": "[right]"
+        },
+        {
+          "id": "point_left",
+          "emoji": "👈",
+          "fallback": "[left]"
+        },
+        {
+          "id": "writing_hand",
+          "emoji": "✍️",
+          "fallback": "[write]"
+        },
+        {
+          "id": "pray",
+          "emoji": "🙏",
+          "fallback": "[pray]"
+        },
+        {
+          "id": "muscle",
+          "emoji": "💪",
+          "fallback": "[strong]"
+        },
+        {
+          "id": "palms_up",
+          "emoji": "🤲",
+          "fallback": "[offer]"
+        },
+        {
+          "id": "fist_right",
+          "emoji": "🤜",
+          "fallback": "[punch_r]"
+        },
+        {
+          "id": "fist_left",
+          "emoji": "🤛",
+          "fallback": "[punch_l]"
+        },
+        {
+          "id": "vulcan",
+          "emoji": "🖖",
+          "fallback": "[live_long]"
+        },
+        {
+          "id": "palms_up_light",
+          "emoji": "🤲🏻",
+          "fallback": "[offer_light]"
+        }
+      ]
+    },
+    {
+      "id": "hearts",
+      "name": "情感",
+      "items": [
+        {
+          "id": "red_heart",
+          "emoji": "❤️",
+          "fallback": "<3"
+        },
+        {
+          "id": "broken_heart",
+          "emoji": "💔",
+          "fallback": "</3"
+        },
+        {
+          "id": "blue_heart",
+          "emoji": "💙",
+          "fallback": "<3blue"
+        },
+        {
+          "id": "green_heart",
+          "emoji": "💚",
+          "fallback": "<3green"
+        },
+        {
+          "id": "yellow_heart",
+          "emoji": "💛",
+          "fallback": "<3yellow"
+        },
+        {
+          "id": "purple_heart",
+          "emoji": "💜",
+          "fallback": "<3purple"
+        },
+        {
+          "id": "sparkles",
+          "emoji": "✨",
+          "fallback": "[star]"
+        },
+        {
+          "id": "fire",
+          "emoji": "🔥",
+          "fallback": "[fire]"
+        },
+        {
+          "id": "rainbow",
+          "emoji": "🌈",
+          "fallback": "[rainbow]"
+        },
+        {
+          "id": "star",
+          "emoji": "⭐",
+          "fallback": "*"
+        },
+        {
+          "id": "sun",
+          "emoji": "☀️",
+          "fallback": "[sun]"
+        },
+        {
+          "id": "moon",
+          "emoji": "🌙",
+          "fallback": "[moon]"
+        },
+        {
+          "id": "cloud",
+          "emoji": "☁️",
+          "fallback": "[cloud]"
+        },
+        {
+          "id": "sweat_drops",
+          "emoji": "💦",
+          "fallback": "[sweat]"
+        },
+        {
+          "id": "zap",
+          "emoji": "⚡",
+          "fallback": "[zap]"
+        }
+      ]
+    },
+    {
+      "id": "school",
+      "name": "上學/孩童",
+      "items": [
+        {
+          "id": "school",
+          "emoji": "🏫",
+          "fallback": "[school]"
+        },
+        {
+          "id": "books",
+          "emoji": "📚",
+          "fallback": "[books]"
+        },
+        {
+          "id": "notebook",
+          "emoji": "📒",
+          "fallback": "[notebook]"
+        },
+        {
+          "id": "pencil",
+          "emoji": "✏️",
+          "fallback": "[pencil]"
+        },
+        {
+          "id": "runner",
+          "emoji": "🏃",
+          "fallback": "[run]"
+        },
+        {
+          "id": "child",
+          "emoji": "🧒",
+          "fallback": "[child]"
+        },
+        {
+          "id": "boy",
+          "emoji": "👦",
+          "fallback": "[boy]"
+        },
+        {
+          "id": "girl",
+          "emoji": "👧",
+          "fallback": "[girl]"
+        },
+        {
+          "id": "backpack",
+          "emoji": "🎒",
+          "fallback": "[bag]"
+        },
+        {
+          "id": "alarm_clock",
+          "emoji": "⏰",
+          "fallback": "[time]"
+        },
+        {
+          "id": "bus",
+          "emoji": "🚌",
+          "fallback": "[bus]"
+        },
+        {
+          "id": "apple",
+          "emoji": "🍎",
+          "fallback": "[apple]"
+        },
+        {
+          "id": "crayon",
+          "emoji": "🖍️",
+          "fallback": "[crayon]"
+        },
+        {
+          "id": "blackboard",
+          "emoji": "🖤",
+          "fallback": "[board]"
+        },
+        {
+          "id": "memo",
+          "emoji": "📝",
+          "fallback": "[note]"
+        }
+      ]
+    },
+    {
+      "id": "family",
+      "name": "老人/家庭",
+      "items": [
+        {
+          "id": "grandpa",
+          "emoji": "👴",
+          "fallback": "[grandpa]"
+        },
+        {
+          "id": "grandma",
+          "emoji": "👵",
+          "fallback": "[grandma]"
+        },
+        {
+          "id": "old_person",
+          "emoji": "🧓",
+          "fallback": "[elder]"
+        },
+        {
+          "id": "man",
+          "emoji": "👨",
+          "fallback": "[man]"
+        },
+        {
+          "id": "woman",
+          "emoji": "👩",
+          "fallback": "[woman]"
+        },
+        {
+          "id": "baby",
+          "emoji": "👶",
+          "fallback": "[baby]"
+        },
+        {
+          "id": "home",
+          "emoji": "🏠",
+          "fallback": "[home]"
+        },
+        {
+          "id": "phone",
+          "emoji": "📞",
+          "fallback": "[phone]"
+        },
+        {
+          "id": "bed",
+          "emoji": "🛏️",
+          "fallback": "[bed]"
+        },
+        {
+          "id": "family",
+          "emoji": "👨‍👩‍👧‍👦",
+          "fallback": "[family]"
+        },
+        {
+          "id": "walking",
+          "emoji": "🚶",
+          "fallback": "[walk]"
+        },
+        {
+          "id": "hug",
+          "emoji": "🫂",
+          "fallback": "[hug]"
+        },
+        {
+          "id": "tv",
+          "emoji": "📺",
+          "fallback": "[tv]"
+        },
+        {
+          "id": "radio",
+          "emoji": "📻",
+          "fallback": "[radio]"
+        },
+        {
+          "id": "smoking",
+          "emoji": "🚭",
+          "fallback": "[no_smoke]"
+        }
+      ]
+    },
+    {
+      "id": "medical",
+      "name": "醫療/服藥",
+      "items": [
+        {
+          "id": "pill",
+          "emoji": "💊",
+          "fallback": "[pill]"
+        },
+        {
+          "id": "syringe",
+          "emoji": "💉",
+          "fallback": "[injection]"
+        },
+        {
+          "id": "stethoscope",
+          "emoji": "🩺",
+          "fallback": "[steth]"
+        },
+        {
+          "id": "bandage",
+          "emoji": "🩹",
+          "fallback": "[bandage]"
+        },
+        {
+          "id": "xray",
+          "emoji": "🩻",
+          "fallback": "[xray]"
+        },
+        {
+          "id": "hospital",
+          "emoji": "🏥",
+          "fallback": "[hospital]"
+        },
+        {
+          "id": "ambulance",
+          "emoji": "🚑",
+          "fallback": "[ambulance]"
+        },
+        {
+          "id": "doctor",
+          "emoji": "🧑‍⚕️",
+          "fallback": "[doctor]"
+        },
+        {
+          "id": "nurse",
+          "emoji": "👩‍⚕️",
+          "fallback": "[nurse]"
+        },
+        {
+          "id": "thermometer",
+          "emoji": "🌡️",
+          "fallback": "[temp]"
+        },
+        {
+          "id": "sick",
+          "emoji": "🤒",
+          "fallback": "[sick]"
+        },
+        {
+          "id": "injured",
+          "emoji": "🤕",
+          "fallback": "[injured]"
+        },
+        {
+          "id": "mask",
+          "emoji": "😷",
+          "fallback": "[mask]"
+        },
+        {
+          "id": "blood",
+          "emoji": "🩸",
+          "fallback": "[blood]"
+        },
+        {
+          "id": "dropper",
+          "emoji": "🧪",
+          "fallback": "[lab]"
+        }
+      ]
+    },
+    {
+      "id": "emergency",
+      "name": "緊急/安全",
+      "items": [
+        {
+          "id": "megaphone",
+          "emoji": "📢",
+          "fallback": "[info]"
+        },
+        {
+          "id": "loudspeaker",
+          "emoji": "📣",
+          "fallback": "[announce]"
+        },
+        {
+          "id": "bell",
+          "emoji": "🔔",
+          "fallback": "[bell]"
+        },
+        {
+          "id": "mute_bell",
+          "emoji": "🔕",
+          "fallback": "[mute]"
+        },
+        {
+          "id": "stop",
+          "emoji": "🛑",
+          "fallback": "[stop]"
+        },
+        {
+          "id": "warning",
+          "emoji": "⚠️",
+          "fallback": "[warn]"
+        },
+        {
+          "id": "prohibited",
+          "emoji": "🚫",
+          "fallback": "[ban]"
+        },
+        {
+          "id": "police_car",
+          "emoji": "🚓",
+          "fallback": "[police]"
+        },
+        {
+          "id": "fire_engine",
+          "emoji": "🚒",
+          "fallback": "[firetruck]"
+        },
+        {
+          "id": "ambulance2",
+          "emoji": "🚑",
+          "fallback": "[ambulance]"
+        },
+        {
+          "id": "sos",
+          "emoji": "🆘",
+          "fallback": "[sos]"
+        },
+        {
+          "id": "fire",
+          "emoji": "🔥",
+          "fallback": "[fire]"
+        },
+        {
+          "id": "skull",
+          "emoji": "💀",
+          "fallback": "[danger]"
+        },
+        {
+          "id": "cross_mark",
+          "emoji": "❌",
+          "fallback": "[no]"
+        },
+        {
+          "id": "check",
+          "emoji": "✅",
+          "fallback": "[yes]"
+        }
+      ]
+    }
+  ]
+}

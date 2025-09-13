@@ -30,7 +30,7 @@ function onKey(e: KeyboardEvent) {
   } else if (e.key === 'ArrowUp') {
     e.preventDefault()
     focusAt(focusIndex.value - 1)
-  } else if (e.key === 'Enter' || e.key === 'z' || e.key === 'Z') {
+  } else if (e.key === 'Enter') {
     if (focusIndex.value === fields.length - 1) {
       e.preventDefault()
       join()
@@ -66,7 +66,7 @@ async function join() {
   <div
     class="h-full flex flex-col bg-gradient-to-b from-lime-400 via-amber-400 to-rose-400 text-black"
   >
-    <div class="flex-1 p-2 text-sm">
+    <div class="flex-1 content-scroll p-2 text-sm">
       <label class="text-xs">Channel ID</label>
       <input
         ref="codeRef"

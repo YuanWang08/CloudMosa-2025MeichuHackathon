@@ -39,7 +39,7 @@ function onKey(e: KeyboardEvent) {
   } else if (e.key === 'ArrowUp') {
     e.preventDefault()
     focusAt(focusIndex.value - 1)
-  } else if (e.key === 'Enter' || e.key === 'z' || e.key === 'Z') {
+  } else if (e.key === 'Enter') {
     // 在 checkbox 上時切換
     if (focusIndex.value === 1) {
       e.preventDefault()
@@ -91,7 +91,7 @@ async function createChannel() {
   <div
     class="h-full flex flex-col bg-gradient-to-b from-emerald-400 via-sky-400 to-indigo-400 text-white"
   >
-    <div class="flex-1 p-2 text-sm space-y-2">
+    <div class="flex-1 content-scroll p-2 text-sm space-y-2">
       <label class="text-xs">Title</label>
       <input
         ref="titleRef"

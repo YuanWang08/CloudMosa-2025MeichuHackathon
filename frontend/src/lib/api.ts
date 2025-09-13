@@ -19,6 +19,16 @@ export async function apiFetch<T = unknown>(path: string, init: RequestInit = {}
   const text = await res.text()
   const data = text ? JSON.parse(text) : null
   if (!res.ok) {
+    // 若憑證失效，清理並導向登入頁
+    if (res.status === 401) {
+      try {
+        auth.clear()
+      } catch {}
+      try {
+        // 以 hash 方式避免 router 物件相依
+        window.location.assign('/signin')
+      } catch {}
+    }
     const msg = (data && (data.message || data.error)) || `HTTP ${res.status}`
     throw new Error(msg)
   }

@@ -6,6 +6,7 @@ export interface UserProfile {
   username: string
   avatarInitials: string
   avatarColor: string
+  avatarImage?: string | null
 }
 
 export const useAuthStore = defineStore('auth', () => {

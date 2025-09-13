@@ -31,6 +31,11 @@ const User = sequelize.define(
       allowNull: false,
       defaultValue: "#4f46e5",
     },
+    avatarImage: {
+      // 檔名（例如 "01.png"），前端使用 /avatars/{檔名} 取圖
+      type: DataTypes.STRING(128),
+      allowNull: true,
+    },
   },
   {
     tableName: "users",

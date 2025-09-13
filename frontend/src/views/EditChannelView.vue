@@ -32,7 +32,9 @@ async function load() {
     const ch = (await channelsApi.details(id)) as ChannelWithQuickReplies
     title.value = ch.title
     allowJoin.value = ch.allowJoin
-    const map = new Map((ch.ChannelQuickReplies || []).map((q) => [q.index, q.text]))
+    const map = new Map<number, string>(
+      (ch.ChannelQuickReplies || []).map((q) => [q.index, q.text] as [number, string]),
+    )
     qrs.value = [map.get(7) || '', map.get(8) || '', map.get(9) || '']
   } catch (e: unknown) {
     error.value = e instanceof Error ? e.message : 'Failed to load'
@@ -78,7 +80,7 @@ function onKey(e: KeyboardEvent) {
       e.preventDefault()
       allowJoin.value = !allowJoin.value
     }
-  } else if (e.key === 'Enter' || e.key === 'z' || e.key === 'Z') {
+  } else if (e.key === 'Enter') {
     // 在 checkbox 上時切換
     if (focusIndex.value === 1) {
       e.preventDefault()
@@ -106,7 +108,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
   <div
     class="h-full flex flex-col bg-gradient-to-b from-amber-400 via-rose-400 to-fuchsia-500 text-white"
   >
-    <div class="flex-1 p-2 text-sm space-y-2">
+    <div class="flex-1 content-scroll p-2 text-sm space-y-2">
       <div v-if="loading" class="opacity-80">Loading…</div>
       <div v-else-if="error" class="text-black">{{ error }}</div>
       <template v-else>

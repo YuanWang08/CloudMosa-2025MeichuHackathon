@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref, watch, nextTick, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { channelsApi, messagesApi } from '@/lib/api'
 import { useUiStore } from '@/stores/ui'
@@ -10,6 +11,7 @@ const route = useRoute()
 const router = useRouter()
 const ui = useUiStore()
 const auth = useAuthStore()
+const { t } = useI18n()
 const channelId = ref<string>(String(route.params.id))
 const loading = ref(true)
 const error = ref<string | null>(null)
@@ -19,6 +21,7 @@ const msgs = ref<ChannelMessage[]>([])
 const unreadCountRef = ref(0)
 const sending = ref(false)
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
+const sendBtnRef = ref<HTMLButtonElement | null>(null)
 const messagesRef = ref<HTMLDivElement | null>(null)
 const sentOverlay = ref(false)
 const quickInputEnabled = ref(true)
@@ -57,6 +60,8 @@ async function load() {
     loading.value = false
     await nextTick()
     if (isOwnerRef.value) textareaRef.value?.focus()
+    // 初始化軟鍵
+    updateSoftkeys()
   }
 }
 
@@ -82,14 +87,33 @@ async function send(text?: string) {
 }
 
 function insertText(text: string) {
-  // 將文字插入 textarea 尾端，並加空格分隔
-  const sep = input.value && !/\s$/.test(input.value) ? ' ' : ''
-  input.value = input.value + sep + text
+  // 快捷輸入：不自動加空格，直接附加文字
+  input.value = input.value + text
   nextTick(() => textareaRef.value?.focus())
 }
 
 function useQuick(q: string) {
   insertText(q)
+}
+
+function updateSoftkeys() {
+  // 非 owner 使用預設（RSK=Back 由 App 控制）
+  if (!isOwnerRef.value) {
+    ui.setSoftkeys(null)
+    return
+  }
+  // 擁有者：RSK 一律為 Back；若有輸入內容則詢問捨棄
+  ui.setSoftkeys({
+    rightLabel: 'Back',
+    showRight: true,
+    onRight: async () => {
+      if (input.value.trim().length > 0) {
+        const ok = await ui.openConfirm(t('menu.confirmBackDiscard'))
+        if (!ok) return
+      }
+      router.back()
+    },
+  })
 }
 
 watch(
@@ -99,6 +123,9 @@ watch(
     load()
   },
 )
+
+// 監聽輸入與 owner 狀態變化，動態更新軟鍵
+watch([input, isOwnerRef], () => updateSoftkeys())
 
 function onKey(e: KeyboardEvent) {
   // 若顯示成功覆蓋層，阻擋其他按鍵
@@ -123,6 +150,21 @@ function onKey(e: KeyboardEvent) {
     quickInputEnabled.value = !quickInputEnabled.value
     nextTick(() => textareaRef.value?.focus())
     return
+  }
+
+  // 在 owner 模式下，提供上下鍵在輸入框與 Send 按鈕之間移動焦點
+  if (isOwnerRef.value && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+    const active = document.activeElement as HTMLElement | null
+    if (e.key === 'ArrowDown' && active === textareaRef.value) {
+      e.preventDefault()
+      sendBtnRef.value?.focus()
+      return
+    }
+    if (e.key === 'ArrowUp' && active === sendBtnRef.value) {
+      e.preventDefault()
+      textareaRef.value?.focus()
+      return
+    }
   }
 
   // 數字鍵 1~9 對應預設與自訂 quick replies（僅在開啟快速輸入時）
@@ -159,6 +201,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKey)
   ui.closeMenu()
+  ui.setSoftkeys(null)
 })
 </script>
 
@@ -189,6 +232,7 @@ onBeforeUnmount(() => {
             :disabled="sending || !input.trim()"
             class="w-full bg-amber-300 text-black rounded py-1 disabled:opacity-60"
             @click="send()"
+            ref="sendBtnRef"
           >
             Send
           </button>
@@ -243,7 +287,7 @@ onBeforeUnmount(() => {
         <!-- 加入者：唯讀訊息列表（類似歷史頁） -->
         <template v-else>
           <div ref="messagesRef" class="flex-1 min-h-0 overflow-auto space-y-3">
-            <template v-for="(m, idx) in msgs" :key="m.id">
+            <div v-for="(m, idx) in msgs" :key="m.id">
               <!-- 分隔線：未讀與已讀的邊界（清單為新到舊，未讀在前） -->
               <div
                 v-if="unreadCountRef > 0 && idx === unreadCountRef"
@@ -271,7 +315,7 @@ onBeforeUnmount(() => {
                   >NEW</span
                 >
               </div>
-            </template>
+            </div>
             <div v-if="msgs.length === 0" class="opacity-80">No messages yet.</div>
           </div>
         </template>

@@ -23,13 +23,67 @@ const isMainPage = computed(
       route.path.startsWith('/message')),
 )
 
+function isEditableTarget(e: KeyboardEvent): boolean {
+  const el = (e.target as HTMLElement) || (document.activeElement as HTMLElement | null)
+  if (!el) return false
+  const tag = el.tagName?.toLowerCase()
+  if (tag === 'textarea')
+    return !(el as HTMLTextAreaElement).readOnly && !(el as HTMLTextAreaElement).disabled
+  if (tag === 'input') {
+    const inp = el as HTMLInputElement
+    const type = (inp.type || 'text').toLowerCase()
+    const textLike = ['text', 'search', 'email', 'password', 'number', 'url', 'tel']
+    return textLike.includes(type) && !inp.readOnly && !inp.disabled
+  }
+  // contenteditable
+  if (el.isContentEditable) return true
+  return false
+}
+
+// 當確認框用鍵盤關閉後，避免接下來的一次 keyup 對底層元件產生 click
+let swallowNextDecisionKeyUp = false
+
+// 最高優先（捕獲階段）攔截：確認框開啟時消化決策鍵，避免其他 handler 介入
+function onPreKeydown(e: KeyboardEvent) {
+  if (!ui.confirmOpen) return
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    e.preventDefault()
+    e.stopPropagation()
+    // 左右切換選項
+    ui.toggleConfirmSelection()
+    return
+  }
+  if (e.key === 'Enter') {
+    e.preventDefault()
+    e.stopPropagation()
+    ui.chooseConfirm(ui.confirmSelectedYes)
+    swallowNextDecisionKeyUp = true
+    return
+  }
+  if (e.key === 'Escape') {
+    e.preventDefault()
+    e.stopPropagation()
+    ui.chooseConfirm(true)
+    swallowNextDecisionKeyUp = true
+    return
+  }
+  if (e.key === 'F12' || e.key === 'Backspace') {
+    e.preventDefault()
+    e.stopPropagation()
+    ui.chooseConfirm(false)
+    swallowNextDecisionKeyUp = true
+    return
+  }
+}
+
 function onLeft() {
   if (ui.confirmOpen) {
     ui.chooseConfirm(true)
+    swallowNextDecisionKeyUp = true
     return
   }
-  // 歷史頁隱藏 Menu：按 LSK 無反應
-  if (ui.context.page === 'history') return
+  // 歷史/加入頁隱藏 Menu：按 LSK 無反應
+  if (ui.context.page === 'history' || ui.context.page === 'join') return
   if (isAuthPage.value) return
   // 開啟 Options Menu
   ui.openMenu()
@@ -37,6 +91,7 @@ function onLeft() {
 async function onRight() {
   if (ui.confirmOpen) {
     ui.chooseConfirm(false)
+    swallowNextDecisionKeyUp = true
     return
   }
   if (isAuthPage.value || isMainPage.value) return
@@ -54,30 +109,43 @@ async function onRight() {
 }
 
 async function onKeydown(e: KeyboardEvent) {
-  // 確認框優先：Z=Yes、X=No
+  // 確認框優先：Escape=LSK(Yes)、F12=RSK(No)
   if (ui.confirmOpen) {
-    if (e.key === 'z' || e.key === 'Z') {
+    if (e.key === 'Enter') {
       e.preventDefault()
-      ui.chooseConfirm(true)
+      ui.chooseConfirm(ui.confirmSelectedYes)
+      swallowNextDecisionKeyUp = true
       return
     }
-    if (e.key === 'x' || e.key === 'X') {
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      ui.chooseConfirm(true)
+      swallowNextDecisionKeyUp = true
+      return
+    }
+    if (e.key === 'F12' || e.key === 'Backspace') {
       e.preventDefault()
       ui.chooseConfirm(false)
+      swallowNextDecisionKeyUp = true
       return
     }
   }
 
-  // Z/X 全域 LSK/RSK 映射（避免在確認框/選單/認證頁觸發）
+  // 全域 LSK/RSK 映射（避免在確認框/選單/認證頁觸發）
+  // LSK: Escape → onLeft；RSK: F12 → onRight
   if (!ui.menuOpen && !ui.confirmOpen && !isAuthPage.value) {
-    if (e.key === 'z' || e.key === 'Z') {
+    if (e.key === 'Escape') {
       e.preventDefault()
-      onLeft()
+      // 若有頁面自訂 onLeft，優先使用
+      if (ui.softkeys?.onLeft) ui.softkeys.onLeft()
+      else onLeft()
       return
     }
-    if (e.key === 'x' || e.key === 'X') {
+    if (e.key === 'F12') {
       e.preventDefault()
-      onRight()
+      // 若有頁面自訂 onRight，優先使用
+      if (ui.softkeys?.onRight) ui.softkeys.onRight()
+      else onRight()
       return
     }
   }
@@ -88,7 +156,10 @@ async function onKeydown(e: KeyboardEvent) {
     const target = e.key === 'ArrowLeft' ? '/broadcast' : '/message'
     if (!route.path.startsWith(target)) router.push(target)
   }
-  if (e.key === 'Backspace' || e.key === 'Escape') {
+  // Back 動作：改用 F12（RSK）觸發；保留 Backspace 當作硬體返回鍵替代
+  if (e.key === 'Backspace') {
+    // 若正在輸入欄位中，交給瀏覽器做刪字，不做返回
+    if (isEditableTarget(e)) return
     // 首頁詢問是否要離開
     if (isMainPage.value) {
       e.preventDefault()
@@ -107,11 +178,52 @@ async function onKeydown(e: KeyboardEvent) {
       if (ok) router.back()
       return
     }
+    // 頻道（擁有者）返回：依右軟鍵狀態決定
+    if (route.path.startsWith('/channel/') && ui.context.isOwner) {
+      e.preventDefault()
+      // 若頁面已將右軟鍵設為 Back，直接使用 onRight（立即返回）
+      if (ui.softkeys?.rightLabel === 'Back' && ui.softkeys.onRight) {
+        ui.softkeys.onRight()
+      } else {
+        // 其他情況（多半為 Send），給返回捨棄確認
+        const ok = await ui.openConfirm(t('menu.confirmBackDiscard'))
+        if (ok) router.back()
+      }
+      return
+    }
   }
 }
 
-onMounted(() => window.addEventListener('keydown', onKeydown))
-onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
+onMounted(() => {
+  window.addEventListener('keydown', onPreKeydown, { capture: true })
+  window.addEventListener('keydown', onKeydown)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onPreKeydown, { capture: true })
+  window.removeEventListener('keydown', onKeydown)
+})
+
+// 另外攔截 keyup，避免 Enter keyup 觸發底層按鈕 click（例如 Logout）
+function onKeyup(e: KeyboardEvent) {
+  // 若剛從確認框關閉，吞掉這次 keyup，避免觸發底層 button click
+  if (
+    swallowNextDecisionKeyUp &&
+    (e.key === 'Enter' || e.key === 'Escape' || e.key === 'F12' || e.key === 'Backspace')
+  ) {
+    e.preventDefault()
+    e.stopPropagation()
+    swallowNextDecisionKeyUp = false
+    return
+  }
+  if (!ui.confirmOpen) return
+  if (e.key === 'Enter' || e.key === 'Escape' || e.key === 'F12' || e.key === 'Backspace') {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+}
+const useCapture = true
+onMounted(() => window.addEventListener('keyup', onKeyup, { capture: useCapture }))
+onBeforeUnmount(() => window.removeEventListener('keyup', onKeyup, { capture: useCapture }))
 
 // 根據路由變化設定 UI 上下文
 watch(
@@ -125,8 +237,10 @@ watch(
     else if (route.path.startsWith('/broadcast')) ui.setContext({ page: 'broadcast' })
     else if (route.path.startsWith('/message')) ui.setContext({ page: 'message' })
     else if (route.path.startsWith('/create')) ui.setContext({ page: 'create' })
-    else if (route.path.startsWith('/join')) ui.setContext({ page: 'join' })
-    else if (route.path.startsWith('/settings/language')) ui.setContext({ page: 'language' })
+    else if (route.path.startsWith('/join')) {
+      ui.setContext({ page: 'join' })
+      ui.closeMenu()
+    } else if (route.path.startsWith('/settings/language')) ui.setContext({ page: 'language' })
     else if (route.path.startsWith('/settings')) ui.setContext({ page: 'settings' })
     else if (route.path.startsWith('/history/')) ui.setContext({ page: 'history' })
     else if (route.path.startsWith('/edit/')) ui.setContext({ page: 'edit' })
@@ -219,17 +333,28 @@ async function onMenuAction({ type }: { type: string }) {
           </nav>
         </template>
       </header>
-      <main class="flex-1 min-h-0 overflow-hidden text-black relative">
+      <main
+        class="flex-1 min-h-0 overflow-hidden text-black relative"
+        :style="isAuthPage ? '' : 'padding-bottom: var(--softkey-h)'"
+      >
         <RouterView />
         <OptionsMenu @action="onMenuAction" />
         <ConfirmDialog />
         <SoftkeyBar
-          :left-label="ui.confirmOpen ? t('common.yes') : undefined"
-          :right-label="ui.confirmOpen ? t('common.no') : undefined"
-          :show-left="(!isAuthPage && ui.context.page !== 'history') || ui.confirmOpen"
-          :show-right="(!isAuthPage && !isMainPage) || ui.confirmOpen"
-          @left="onLeft"
-          @right="onRight"
+          :left-label="ui.confirmOpen ? t('common.yes') : (ui.softkeys?.leftLabel ?? undefined)"
+          :right-label="ui.confirmOpen ? t('common.no') : (ui.softkeys?.rightLabel ?? undefined)"
+          :show-left="
+            ui.confirmOpen
+              ? true
+              : (ui.softkeys?.showLeft ??
+                (!isAuthPage && ui.context.page !== 'history' && ui.context.page !== 'join'))
+          "
+          :show-right="
+            ui.confirmOpen ? true : (ui.softkeys?.showRight ?? (!isAuthPage && !isMainPage))
+          "
+          :flat="isAuthPage"
+          @left="ui.softkeys?.onLeft ? ui.softkeys.onLeft() : onLeft()"
+          @right="ui.softkeys?.onRight ? ui.softkeys.onRight() : onRight()"
         />
       </main>
     </div>

@@ -29,6 +29,7 @@ body {
 :root {
   --phone-w: 240px; /* default QVGA */
   --phone-h: 320px;
+  --softkey-h: 32px; /* 全域軟鍵列高度 */
 }
 .size-qvga {
   --phone-w: 240px;
@@ -37,4 +38,11 @@ body {
 .size-qqvga {
   --phone-w: 128px;
   --phone-h: 160px;
+}
+
+/* 通用長頁容器：避免被 SoftkeyBar 蓋住且可捲動 */
+.content-scroll {
+  min-height: 0; /* 使 flex 子元素能在剩餘空間內正確收縮 */
+  overflow: auto; /* 長內容可捲動 */
+  padding-bottom: var(--softkey-h);
 }

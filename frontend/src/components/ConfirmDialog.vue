@@ -14,15 +14,12 @@ function onKey(e: KeyboardEvent) {
   } else if (e.key === 'Enter') {
     e.preventDefault()
     ui.chooseConfirm(ui.confirmSelectedYes)
-  } else if (e.key === 'Escape' || e.key === 'Backspace') {
+  } else if (e.key === 'F12' || e.key === 'Backspace') {
     e.preventDefault()
     ui.chooseConfirm(false)
-  } else if (e.key === 'z' || e.key === 'Z') {
+  } else if (e.key === 'Escape') {
     e.preventDefault()
     ui.chooseConfirm(true)
-  } else if (e.key === 'x' || e.key === 'X') {
-    e.preventDefault()
-    ui.chooseConfirm(false)
   }
 }
 
@@ -31,12 +28,16 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 </script>
 
 <template>
-  <div v-if="ui.confirmOpen" class="absolute inset-0 z-30">
-    <div class="absolute inset-0 bg-black/60" />
-    <div class="absolute left-3 right-3 top-1/3 bg-white text-black rounded shadow p-3 text-sm">
+  <div v-if="ui.confirmOpen" class="absolute inset-0 z-30" @click.stop>
+    <div class="absolute inset-0 bg-black/60" @click.stop />
+    <div
+      class="absolute left-3 right-3 top-1/3 bg-white text-black rounded shadow p-3 text-sm"
+      @click.stop
+    >
       <div class="mb-3">{{ ui.confirmMessage }}</div>
       <div class="flex gap-2 justify-end">
         <button
+          @click.stop
           :class="[
             'px-3 py-1 rounded',
             ui.confirmSelectedYes ? 'bg-black text-white' : 'bg-neutral-200',
@@ -46,6 +47,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           {{ t('common.yes', 'Yes') }}
         </button>
         <button
+          @click.stop
           :class="[
             'px-3 py-1 rounded',
             !ui.confirmSelectedYes ? 'bg-black text-white' : 'bg-neutral-200',

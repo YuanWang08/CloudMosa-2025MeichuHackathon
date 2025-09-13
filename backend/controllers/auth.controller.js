@@ -52,6 +52,7 @@ exports.signup = async (req, res) => {
         username: user.username,
         avatarInitials: user.avatarInitials,
         avatarColor: user.avatarColor,
+        avatarImage: user.avatarImage,
       },
     });
   } catch (err) {
@@ -79,6 +80,7 @@ exports.login = async (req, res) => {
         username: user.username,
         avatarInitials: user.avatarInitials,
         avatarColor: user.avatarColor,
+        avatarImage: user.avatarImage,
       },
     });
   } catch (err) {
@@ -96,6 +98,7 @@ exports.me = async (req, res) => {
       username: u.username,
       avatarInitials: u.avatarInitials,
       avatarColor: u.avatarColor,
+      avatarImage: u.avatarImage,
     });
   } catch (err) {
     console.error(err);
@@ -106,7 +109,7 @@ exports.me = async (req, res) => {
 // Update profile (username)
 exports.updateProfile = async (req, res) => {
   try {
-    const { username } = req.body;
+    const { username, avatarImage } = req.body;
     if (!username || !usernameValid(username)) {
       return res.status(400).json({ message: "Invalid username format" });
     }
@@ -120,12 +123,14 @@ exports.updateProfile = async (req, res) => {
     }
     user.username = username;
     user.avatarInitials = username.slice(0, 2).toUpperCase();
+    if (avatarImage) user.avatarImage = avatarImage;
     await user.save();
     return res.json({
       id: user.id,
       username: user.username,
       avatarInitials: user.avatarInitials,
       avatarColor: user.avatarColor,
+      avatarImage: user.avatarImage,
     });
   } catch (err) {
     console.error(err);

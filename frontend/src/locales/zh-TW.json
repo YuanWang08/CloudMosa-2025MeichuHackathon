@@ -43,11 +43,13 @@
   },
   "settings": {
     "language": "語言",
-    "appearance": "外觀（深色/淺色）",
-    "defaultPage": "預設頁面（廣播/訊息）",
+    "appearance": "外觀",
+    "defaultPage": "預設頁面",
     "smsPush": "SMS 推播",
     "favoriteEmojis": "常用表情（即將推出）",
-    "profile": "個人資料"
+    "profile": "個人資料",
+    "logout": "登出",
+    "confirmLogout": "要登出嗎？"
   },
   "profile": {
     "username": "使用者名稱",

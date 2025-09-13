@@ -8,6 +8,7 @@ defineProps<{
   rightLabel?: string
   showLeft?: boolean
   showRight?: boolean
+  flat?: boolean
 }>()
 
 defineEmits<{
@@ -19,7 +20,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="softkey-bar">
+  <div class="softkey-bar" :class="{ flat }">
     <button class="sk-btn left" v-if="showLeft !== false" @click="$emit('left')">
       <IconMenu class="icon" />
       <span class="label">{{ leftLabel ?? t('softkeys.menu', 'Menu') }}</span>
@@ -30,8 +31,6 @@ const { t } = useI18n()
       <IconBack class="icon" />
     </button>
   </div>
-  <div class="softkey-safe" />
-  <!-- spacer to not hide content -->
 </template>
 
 <style scoped>
@@ -40,15 +39,16 @@ const { t } = useI18n()
   left: 0;
   right: 0;
   bottom: 0;
-  height: 32px;
+  height: var(--softkey-h);
   display: flex;
   align-items: center;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
   padding: 0 6px;
 }
-.softkey-safe {
-  height: 32px;
+.softkey-bar.flat {
+  background: transparent;
+  color: inherit;
 }
 .sk-btn {
   display: inline-flex;

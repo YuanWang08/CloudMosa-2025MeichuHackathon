@@ -8,7 +8,7 @@
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "toSignUp": "Create an account",
-    "toSignIn": "Already have an account? Sign in",
+    "toSignIn": "Have an account? Sign in",
     "username": "Username",
     "password": "Password",
     "usernamePlaceholder": "6-16 letters, numbers, _",
@@ -43,11 +43,13 @@
   },
   "settings": {
     "language": "Language",
-    "appearance": "Appearance (Dark/Light)",
-    "defaultPage": "Default Page (Broadcast/Message)",
+    "appearance": "Appearance",
+    "defaultPage": "Default Page",
     "smsPush": "SMS Push",
     "favoriteEmojis": "Favorite Emojis (Coming soon)",
-    "profile": "Profile"
+    "profile": "Profile",
+    "logout": "Log out",
+    "confirmLogout": "Log out now?"
   },
   "profile": {
     "username": "Username",

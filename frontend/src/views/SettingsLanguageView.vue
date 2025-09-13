@@ -15,6 +15,10 @@ function focusActive() {
   itemRefs.value[active.value]?.focus()
 }
 
+function onItemRef(el: unknown, idx: number) {
+  setRef((el as HTMLButtonElement) || null, idx)
+}
+
 function onKey(e: KeyboardEvent) {
   if (ui.confirmOpen || ui.menuOpen) return
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
@@ -48,7 +52,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
       <ul class="space-y-2">
         <li v-for="(loc, idx) in options" :key="loc">
           <button
-            :ref="(el) => setRef(el as HTMLButtonElement | null, idx)"
+            :ref="(el) => onItemRef(el, idx)"
             class="w-full text-left rounded px-2 py-2"
             :class="active === idx ? 'bg-black/20' : 'bg-white/70'"
             @click="choose(loc)"

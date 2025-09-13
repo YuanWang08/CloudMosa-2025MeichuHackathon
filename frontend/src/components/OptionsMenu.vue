@@ -57,11 +57,11 @@ function onKey(e: KeyboardEvent) {
   } else if (e.key === 'ArrowUp') {
     e.preventDefault()
     activeIndex.value = (activeIndex.value - 1 + items.value.length) % items.value.length
-  } else if (e.key === 'Enter' || e.key === 'z' || e.key === 'Z') {
+  } else if (e.key === 'Enter' || e.key === 'Escape') {
     e.preventDefault()
     const it = items.value[activeIndex.value]
     if (it) onPick(it.key)
-  } else if (e.key === 'Escape' || e.key === 'Backspace' || e.key === 'x' || e.key === 'X') {
+  } else if (e.key === 'F12' || e.key === 'Backspace') {
     e.preventDefault()
     ui.closeMenu()
   }
