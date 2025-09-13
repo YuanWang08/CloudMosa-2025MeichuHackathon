@@ -1,1 +1,86 @@
-{}
+{
+  "common": {
+    "loading": "載入中...",
+    "yes": "是",
+    "no": "否"
+  },
+  "auth": {
+    "signIn": "登入",
+    "signUp": "註冊",
+    "toSignUp": "建立帳號",
+    "toSignIn": "已有帳號？前往登入",
+    "username": "使用者 ID",
+    "password": "密碼",
+    "usernamePlaceholder": "6-16 英數或底線",
+    "passwordPlaceholder": "6-16 英數或底線",
+    "invalidUsername": "ID 格式不正確",
+    "invalidPassword": "密碼格式不正確"
+  },
+  "menu": {
+    "join": "加入頻道",
+    "create": "建立頻道",
+    "settings": "設定",
+    "history": "頻道記錄",
+    "edit": "編輯頻道",
+    "remove": "刪除頻道",
+    "leave": "退出頻道",
+    "confirmBackDiscard": "返回會捨棄當前內容，是否繼續？",
+    "confirmRemove": "刪除後將失去所有歷史紀錄，且訂閱者不再接收訊息，確定要刪除嗎？",
+    "confirmLeave": "退出後會失去所有歷史紀錄，確定要退出嗎？",
+    "exitApp": "要離開應用程式嗎？"
+  },
+  "softkeys": {
+    "menu": "選單",
+    "back": "返回"
+  },
+  "headers": {
+    "language": "語言",
+    "sms": "SMS",
+    "profile": "個人資料",
+    "settings": "設定",
+    "broadcast": "廣播",
+    "message": "訊息"
+  },
+  "settings": {
+    "language": "語言",
+    "appearance": "外觀（深色/淺色）",
+    "defaultPage": "預設頁面（廣播/訊息）",
+    "smsPush": "SMS 推播",
+    "favoriteEmojis": "常用表情（即將推出）",
+    "profile": "個人資料"
+  },
+  "profile": {
+    "username": "使用者名稱",
+    "usernameHint": "輸入 6-16 英數或底線",
+    "save": "儲存",
+    "changePassword": "變更密碼",
+    "old": "目前",
+    "new": "新密碼",
+    "confirm": "確認",
+    "update": "更新",
+    "msg": {
+      "notAuthed": "尚未登入",
+      "invalidUsername": "使用者名稱不符合規則",
+      "saved": "已儲存",
+      "invalidNewPassword": "新密碼不符合規則",
+      "passwordNotMatch": "兩次密碼不一致",
+      "passwordUpdated": "已更新密碼",
+      "failed": "失敗",
+      "error": "錯誤"
+    }
+  },
+  "sms": {
+    "enable": "啟用 SMS",
+    "phoneNumber": "電話號碼",
+    "typeToFilter": "輸入以篩選",
+    "enterNumbers": "輸入數字…"
+  },
+  "languages": {
+    "en": "English",
+    "zh-TW": "繁體中文"
+  },
+  "themes": {
+    "dark": "深色",
+    "light": "淺色"
+  }
+}

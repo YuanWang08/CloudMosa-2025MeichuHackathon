@@ -7,8 +7,7 @@ type Locale = (typeof SUPPORT_LOCALES)[number]
 function detectLocale(): Locale {
   const saved = localStorage.getItem('locale') as Locale | null
   if (saved && SUPPORT_LOCALES.includes(saved)) return saved
-  const nav = navigator.language
-  if (nav.startsWith('zh')) return 'zh-TW'
+  // 預設一律 English
   return 'en'
 }
 

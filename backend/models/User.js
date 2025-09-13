@@ -1,0 +1,41 @@
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/database");
+
+const User = sequelize.define(
+  "User",
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    username: {
+      type: DataTypes.STRING(32),
+      unique: true,
+      allowNull: false,
+      validate: {
+        is: /^[A-Za-z0-9_]{6,16}$/,
+      },
+    },
+    passwordHash: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    avatarInitials: {
+      type: DataTypes.STRING(2),
+      allowNull: false,
+      defaultValue: "U",
+    },
+    avatarColor: {
+      type: DataTypes.STRING(16),
+      allowNull: false,
+      defaultValue: "#4f46e5",
+    },
+  },
+  {
+    tableName: "users",
+    indexes: [{ unique: true, fields: ["username"] }],
+  }
+);
+
+module.exports = User;

@@ -1,1 +1,86 @@
-{}
+{
+  "common": {
+    "loading": "Loading...",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "toSignUp": "Create an account",
+    "toSignIn": "Already have an account? Sign in",
+    "username": "Username",
+    "password": "Password",
+    "usernamePlaceholder": "6-16 letters, numbers, _",
+    "passwordPlaceholder": "6-16 letters, numbers, _",
+    "invalidUsername": "Invalid username format",
+    "invalidPassword": "Invalid password format"
+  },
+  "menu": {
+    "join": "Join Channel",
+    "create": "Create Channel",
+    "settings": "Settings",
+    "history": "Channel History",
+    "edit": "Edit Channel",
+    "remove": "Delete Channel",
+    "leave": "Leave Channel",
+    "confirmBackDiscard": "Leave now will discard current changes, continue?",
+    "confirmRemove": "Deleting will remove all history and subscribers will no longer receive messages. Proceed?",
+    "confirmLeave": "You will lose local history. Leave this channel?",
+    "exitApp": "Exit the app?"
+  },
+  "softkeys": {
+    "menu": "Menu",
+    "back": "Back"
+  },
+  "headers": {
+    "language": "Language",
+    "sms": "SMS",
+    "profile": "Profile",
+    "settings": "Settings",
+    "broadcast": "Broadcast",
+    "message": "Message"
+  },
+  "settings": {
+    "language": "Language",
+    "appearance": "Appearance (Dark/Light)",
+    "defaultPage": "Default Page (Broadcast/Message)",
+    "smsPush": "SMS Push",
+    "favoriteEmojis": "Favorite Emojis (Coming soon)",
+    "profile": "Profile"
+  },
+  "profile": {
+    "username": "Username",
+    "usernameHint": "Enter 6-16 a-z A-Z 0-9 _",
+    "save": "Save",
+    "changePassword": "Change password",
+    "old": "Old",
+    "new": "New",
+    "confirm": "Confirm",
+    "update": "Update",
+    "msg": {
+      "notAuthed": "Not authed",
+      "invalidUsername": "Invalid username",
+      "saved": "Saved",
+      "invalidNewPassword": "Invalid new password",
+      "passwordNotMatch": "Password not match",
+      "passwordUpdated": "Password updated",
+      "failed": "Failed",
+      "error": "Error"
+    }
+  },
+  "sms": {
+    "enable": "Enable SMS",
+    "phoneNumber": "Phone number",
+    "typeToFilter": "Type to filter",
+    "enterNumbers": "Enter numbers…"
+  },
+  "languages": {
+    "en": "English",
+    "zh-TW": "Traditional Chinese"
+  },
+  "themes": {
+    "dark": "Dark",
+    "light": "Light"
+  }
+}

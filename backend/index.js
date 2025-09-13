@@ -6,6 +6,10 @@ const path = require("path");
 require("dotenv").config();
 const cors = require("cors");
 const indexRouter = require("./routes/index.route");
+const authRouter = require("./routes/auth.route");
+const channelRouter = require("./routes/channel.route");
+const { initDb, sequelize } = require("./config/database");
+require("./models/associations");
 
 const port = process.env.PORT || 3001;
 const app = express();
@@ -17,6 +21,8 @@ app.use(logger("dev"));
 app.use(express.json());
 
 app.use("/api", indexRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/channels", channelRouter);
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -31,6 +37,26 @@ app.use((req, res, next) => {
   next();
 });
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
-});
+async function start() {
+  await initDb();
+  const force = process.env.DB_SYNC_FORCE === "1";
+  const alter = process.env.DB_SYNC_ALTER === "1";
+  if (force) {
+    console.warn(
+      "[DB] sequelize.sync({ force: true }) – dropping and recreating tables"
+    );
+    await sequelize.sync({ force: true });
+  } else if (alter) {
+    console.warn(
+      "[DB] sequelize.sync({ alter: true }) – attempting to alter tables"
+    );
+    await sequelize.sync({ alter: true });
+  } else {
+    await sequelize.sync();
+  }
+  app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
+  });
+}
+
+start();
