@@ -33,6 +33,16 @@ const router = createRouter({
       component: () => import('../views/SettingsLanguageView.vue'),
     },
     {
+      path: '/settings/emoji',
+      name: 'settings-emoji',
+      component: () => import('../views/SettingsFavoriteEmojiView.vue'),
+    },
+    {
+      path: '/settings/emoji/picker',
+      name: 'settings-emoji-picker',
+      component: () => import('../views/SettingsEmojiPickerView.vue'),
+    },
+    {
       path: '/settings/profile',
       name: 'settings-profile',
       component: () => import('../views/ProfileView.vue'),

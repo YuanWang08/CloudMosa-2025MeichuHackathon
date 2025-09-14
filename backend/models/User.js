@@ -36,6 +36,12 @@ const User = sequelize.define(
       type: DataTypes.STRING(128),
       allowNull: true,
     },
+    favoriteEmojis: {
+      // 使用者自訂常用表情（長度 6）
+      type: DataTypes.JSONB,
+      allowNull: false,
+      defaultValue: ["✅", "❌", "⏰", "📢", "👍", "😢"],
+    },
   },
   {
     tableName: "users",

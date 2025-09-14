@@ -7,6 +7,7 @@ export interface UserProfile {
   avatarInitials: string
   avatarColor: string
   avatarImage?: string | null
+  favoriteEmojis?: string[]
 }
 
 export const useAuthStore = defineStore('auth', () => {
@@ -39,11 +40,17 @@ export const useAuthStore = defineStore('auth', () => {
       clear()
       return null
     }
-    const data = await res.json()
+    const data = (await res.json()) as UserProfile
     user.value = data
     localStorage.setItem('user', JSON.stringify(data))
     return data
   }
 
-  return { token, user, isAuthed, setAuth, clear, me }
+  function setFavorites(favs: string[]) {
+    if (!user.value) return
+    user.value = { ...user.value, favoriteEmojis: favs }
+    localStorage.setItem('user', JSON.stringify(user.value))
+  }
+
+  return { token, user, isAuthed, setAuth, clear, me, setFavorites }
 })

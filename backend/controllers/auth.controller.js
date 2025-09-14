@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const path = require("path");
 const User = require("../models/User");
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
@@ -53,6 +55,7 @@ exports.signup = async (req, res) => {
         avatarInitials: user.avatarInitials,
         avatarColor: user.avatarColor,
         avatarImage: user.avatarImage,
+        favoriteEmojis: user.favoriteEmojis,
       },
     });
   } catch (err) {
@@ -81,6 +84,7 @@ exports.login = async (req, res) => {
         avatarInitials: user.avatarInitials,
         avatarColor: user.avatarColor,
         avatarImage: user.avatarImage,
+        favoriteEmojis: user.favoriteEmojis,
       },
     });
   } catch (err) {
@@ -99,6 +103,7 @@ exports.me = async (req, res) => {
       avatarInitials: u.avatarInitials,
       avatarColor: u.avatarColor,
       avatarImage: u.avatarImage,
+      favoriteEmojis: u.favoriteEmojis,
     });
   } catch (err) {
     console.error(err);
@@ -131,7 +136,49 @@ exports.updateProfile = async (req, res) => {
       avatarInitials: user.avatarInitials,
       avatarColor: user.avatarColor,
       avatarImage: user.avatarImage,
+      favoriteEmojis: user.favoriteEmojis,
     });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get emoji catalog (server side reference)
+exports.emojiCatalog = async (_req, res) => {
+  try {
+    const file = path.resolve(__dirname, "../config/emoji.json");
+    const json = fs.readFileSync(file, "utf-8");
+    const data = JSON.parse(json);
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get/Update favorite emojis
+exports.getFavorites = async (req, res) => {
+  try {
+    const u = await User.findByPk(req.userId);
+    if (!u) return res.status(404).json({ message: "Not found" });
+    res.json({ favoriteEmojis: u.favoriteEmojis });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.updateFavorites = async (req, res) => {
+  try {
+    const { favoriteEmojis } = req.body;
+    if (!Array.isArray(favoriteEmojis) || favoriteEmojis.length !== 6)
+      return res.status(400).json({ message: "Invalid favorites" });
+    const u = await User.findByPk(req.userId);
+    if (!u) return res.status(404).json({ message: "Not found" });
+    u.favoriteEmojis = favoriteEmojis.map((x) => String(x || "").slice(0, 4));
+    await u.save();
+    res.json({ favoriteEmojis: u.favoriteEmojis });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });

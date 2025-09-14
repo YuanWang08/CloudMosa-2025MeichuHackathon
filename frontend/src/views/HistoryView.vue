@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { messagesApi, channelsApi } from '@/lib/api'
 import type { ChannelMessage } from '@/types/api'
 import { useUiStore } from '@/stores/ui'
+import { renderMarkdown } from '@/lib/markdown'
 
 const route = useRoute()
 const ui = useUiStore()
@@ -85,10 +86,70 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           <div class="opacity-75 text-[10px] mb-0.5">
             {{ new Date(m.createdAt).toLocaleString() }}
           </div>
-          <div class="whitespace-pre-wrap">{{ m.content }}</div>
+          <div
+            class="prose-sm prose-invert max-w-none break-words markdown-body"
+            v-html="renderMarkdown(m.content)"
+          ></div>
         </div>
         <div v-if="msgs.length === 0" class="opacity-80">No messages yet.</div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Minimal markdown content styling */
+.markdown-body {
+  /* avoid horizontal scrolling: aggressively wrap long tokens */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  /* match container text sizing & line height */
+  line-height: inherit;
+  font-size: inherit;
+}
+.markdown-body :deep(pre) {
+  white-space: pre-wrap;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.markdown-body :deep(code) {
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0 2px;
+  border-radius: 3px;
+}
+.markdown-body :deep(a) {
+  color: #c2e7ff;
+  text-decoration: underline;
+  word-break: break-word;
+}
+.markdown-body :deep(ul),
+.markdown-body :deep(ol) {
+  padding-left: 1.25rem;
+  margin: 0.125rem 0; /* tighter block margin */
+  list-style-position: outside;
+}
+.markdown-body :deep(ul) {
+  list-style-type: disc;
+}
+.markdown-body :deep(ol) {
+  list-style-type: decimal;
+}
+.markdown-body :deep(li) {
+  margin: 0;
+} /* tighter item spacing */
+
+/* paragraphs & headings tighter spacing */
+.markdown-body :deep(p) {
+  margin: 0;
+}
+.markdown-body :deep(h1),
+.markdown-body :deep(h2),
+.markdown-body :deep(h3),
+.markdown-body :deep(h4),
+.markdown-body :deep(h5),
+.markdown-body :deep(h6) {
+  margin: 0.25rem 0 0.125rem; /* small top/bottom */
+  font-size: 1em; /* keep same size as body */
+}
+</style>

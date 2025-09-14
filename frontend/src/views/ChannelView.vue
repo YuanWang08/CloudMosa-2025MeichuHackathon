@@ -6,6 +6,7 @@ import { channelsApi, messagesApi } from '@/lib/api'
 import { useUiStore } from '@/stores/ui'
 import { useAuthStore } from '@/stores/auth'
 import type { ChannelWithQuickReplies, ChannelMessage } from '@/types/api'
+import { renderMarkdown } from '@/lib/markdown'
 
 const route = useRoute()
 const router = useRouter()
@@ -28,6 +29,10 @@ const quickInputEnabled = ref(true)
 const isOwnerRef = ref<boolean | undefined>(undefined)
 
 const defaultQuick = ['✅', '❌', '⏰', '📢', '👍', '😢']
+const quickEmojis = computed(() => {
+  const favs = auth.user?.favoriteEmojis
+  return favs && favs.length === 6 ? favs : defaultQuick
+})
 const customQuick = computed(() => ch.value?.ChannelQuickReplies ?? [])
 
 async function load() {
@@ -173,7 +178,7 @@ function onKey(e: KeyboardEvent) {
     const n = Number(e.key)
     if (n >= 1 && n <= 6) {
       e.preventDefault()
-      insertText(defaultQuick[n - 1])
+      insertText(quickEmojis.value[n - 1])
       return
     }
     if (n >= 7 && n <= 9) {
@@ -241,7 +246,7 @@ onBeforeUnmount(() => {
             <div class="text-xs opacity-90">Quick</div>
             <div class="grid grid-cols-6 gap-1 mt-1">
               <button
-                v-for="(q, idx) in defaultQuick"
+                v-for="(q, idx) in quickEmojis"
                 :key="idx"
                 class="relative bg-white/20 rounded p-1 text-base leading-none"
                 @click="useQuick(q)"
@@ -307,7 +312,10 @@ onBeforeUnmount(() => {
                 <div class="opacity-75 text-[10px] mb-0.5">
                   {{ new Date(m.createdAt).toLocaleString() }}
                 </div>
-                <div class="whitespace-pre-wrap">{{ m.content }}</div>
+                <div
+                  class="prose-sm prose-invert max-w-none break-words whitespace-pre-wrap markdown-body"
+                  v-html="renderMarkdown(m.content)"
+                ></div>
                 <!-- 未讀徽章（只在第一次打開該批未讀時顯示） -->
                 <span
                   v-if="idx < unreadCountRef"
@@ -323,3 +331,57 @@ onBeforeUnmount(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.markdown-body {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: inherit;
+  font-size: inherit;
+}
+.markdown-body :deep(pre) {
+  white-space: pre-wrap;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.markdown-body :deep(code) {
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0 2px;
+  border-radius: 3px;
+}
+.markdown-body :deep(a) {
+  color: #c2e7ff;
+  text-decoration: underline;
+  word-break: break-word;
+}
+.markdown-body :deep(ul),
+.markdown-body :deep(ol) {
+  padding-left: 1.25rem;
+  margin: 0.125rem 0; /* tighter block margin */
+  list-style-position: outside;
+}
+.markdown-body :deep(ul) {
+  list-style-type: disc;
+}
+.markdown-body :deep(ol) {
+  list-style-type: decimal;
+}
+.markdown-body :deep(li) {
+  margin: 0; /* tighter item spacing */
+}
+
+/* paragraphs & headings tighter spacing */
+.markdown-body :deep(p) {
+  margin: 0;
+}
+.markdown-body :deep(h1),
+.markdown-body :deep(h2),
+.markdown-body :deep(h3),
+.markdown-body :deep(h4),
+.markdown-body :deep(h5),
+.markdown-body :deep(h6) {
+  margin: 0.25rem 0 0.125rem; /* small top/bottom */
+  font-size: 1em; /* keep same size as body */
+}
+</style>

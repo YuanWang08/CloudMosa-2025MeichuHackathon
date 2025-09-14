@@ -68,3 +68,28 @@ export const messagesApi = {
   markRead: (channelId: string) =>
     apiFetch<{ ok: boolean }>(`/api/channels/${channelId}/read`, { method: 'POST' }),
 }
+
+// Emoji & Favorites API
+export interface EmojiCatalogItem {
+  id: string
+  emoji: string
+  fallback?: string
+}
+export interface EmojiCategory {
+  id: string
+  name: string
+  items: EmojiCatalogItem[]
+}
+export interface EmojiCatalog {
+  categories: EmojiCategory[]
+}
+
+export const emojiApi = {
+  catalog: () => apiFetch<EmojiCatalog>(`/api/auth/emoji-catalog`),
+  getFavorites: () => apiFetch<{ favoriteEmojis: string[] }>(`/api/auth/favorites`),
+  updateFavorites: (favoriteEmojis: string[]) =>
+    apiFetch<{ favoriteEmojis: string[] }>(`/api/auth/favorites`, {
+      method: 'PUT',
+      body: JSON.stringify({ favoriteEmojis }),
+    }),
+}

@@ -44,7 +44,7 @@ const items = ref<Item[]>([
     value: defaultPage.value,
   },
   { type: 'link', label: t('settings.smsPush'), to: '/settings/sms' },
-  { type: 'placeholder', label: t('settings.favoriteEmojis') },
+  { type: 'link', label: t('settings.favoriteEmojis'), to: '/settings/emoji' },
   { type: 'link', label: t('settings.profile'), to: '/settings/profile' },
 ])
 
