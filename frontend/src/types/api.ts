@@ -8,6 +8,8 @@ export interface Channel {
   updatedAt: string
   // 來自 joined API 的擴充欄位
   unreadCount?: number
+  // joined/details API 可選帶回擁有者資訊
+  owner?: OwnerUser
 }
 
 export interface ChannelQuickReply {
@@ -33,4 +35,12 @@ export interface ChannelMessage {
 export interface JoinChannelResponse {
   ok: boolean
   channelId: string
+}
+
+export interface OwnerUser {
+  id: string
+  username: string
+  avatarImage?: string | null
+  avatarInitials: string
+  avatarColor: string
 }

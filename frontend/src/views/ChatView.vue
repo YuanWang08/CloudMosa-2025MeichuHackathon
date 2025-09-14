@@ -90,10 +90,29 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           v-for="(c, idx) in list"
           :key="c.id"
           :ref="(el) => setItemRef(el as HTMLElement | null, idx)"
-          class="rounded p-2 flex items-center justify-between"
+          class="rounded p-2 flex items-center justify-between gap-2"
           :class="activeIndex === idx ? 'bg-white/25 ring-1 ring-white/50' : 'bg-white/15'"
         >
-          <span class="truncate">{{ c.title }}</span>
+          <div class="flex items-center gap-2 min-w-0 flex-1">
+            <div
+              class="shrink-0 w-7 h-7 rounded-full overflow-hidden bg-white/20 grid place-items-center"
+            >
+              <img
+                v-if="c.owner?.avatarImage"
+                :src="'/avatars/' + c.owner.avatarImage"
+                alt="avatar"
+                class="w-full h-full object-cover"
+                referrerpolicy="no-referrer"
+              />
+              <span
+                v-else
+                class="text-[10px] font-semibold px-1 rounded"
+                :style="{ backgroundColor: c.owner?.avatarColor || '#4f46e5' }"
+                >{{ c.owner?.avatarInitials || 'U' }}</span
+              >
+            </div>
+            <span class="truncate">{{ c.title }}</span>
+          </div>
           <button
             class="relative bg-amber-300 text-black rounded px-2 py-1 text-xs"
             @click="openChannel(c.id)"

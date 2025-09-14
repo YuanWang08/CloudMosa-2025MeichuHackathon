@@ -2,7 +2,7 @@
 import { onMounted, onBeforeUnmount, ref, watch, nextTick, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import { channelsApi, messagesApi } from '@/lib/api'
+import { channelsApi, messagesApi, ttsApi } from '@/lib/api'
 import { useUiStore } from '@/stores/ui'
 import { useAuthStore } from '@/stores/auth'
 import type { ChannelWithQuickReplies, ChannelMessage } from '@/types/api'
@@ -24,6 +24,7 @@ const sending = ref(false)
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
 const sendBtnRef = ref<HTMLButtonElement | null>(null)
 const messagesRef = ref<HTMLDivElement | null>(null)
+const itemRefs = ref<Array<HTMLElement | null>>([])
 const sentOverlay = ref(false)
 const quickInputEnabled = ref(true)
 const isOwnerRef = ref<boolean | undefined>(undefined)
@@ -34,6 +35,92 @@ const quickEmojis = computed(() => {
   return favs && favs.length === 6 ? favs : defaultQuick
 })
 const customQuick = computed(() => ch.value?.ChannelQuickReplies ?? [])
+
+// Joiner read-only selection + TTS state
+const selectedIdx = ref(0)
+const playingIdx = ref<number | null>(null)
+const isPlaying = ref(false)
+const isPaused = ref(false)
+const isLoadingTts = ref(false)
+const playProgress = ref(0)
+const errorMsg = ref<string | null>(null)
+let audio: HTMLAudioElement | null = null
+
+function setItemRef(el: HTMLElement | null, idx: number) {
+  itemRefs.value[idx] = el
+}
+function itemRefSetter(idx: number) {
+  return (el: unknown) => setItemRef((el as HTMLElement) || null, idx)
+}
+function scrollSelectedIntoViewJoiner() {
+  const el = itemRefs.value[selectedIdx.value]
+  if (!el) return
+  el.scrollIntoView({ block: 'nearest' })
+}
+function resetAudioState() {
+  isPlaying.value = false
+  isPaused.value = false
+  isLoadingTts.value = false
+  playProgress.value = 0
+  playingIdx.value = null
+}
+function stopAudio() {
+  try {
+    if (audio) {
+      audio.pause()
+      audio.src = ''
+      audio.load()
+    }
+  } catch {}
+  resetAudioState()
+}
+async function playSelectedJoiner() {
+  const m = msgs.value[selectedIdx.value]
+  if (!m) return
+  if (playingIdx.value !== null && playingIdx.value !== selectedIdx.value) stopAudio()
+  errorMsg.value = null
+  try {
+    isLoadingTts.value = true
+    playingIdx.value = selectedIdx.value
+    const { url } = await ttsApi.synthesize(m.content, undefined, m.id)
+    if (!audio) audio = new Audio()
+    audio.onended = null
+    audio.ontimeupdate = null
+    audio.onloadedmetadata = null
+    audio.onerror = null
+    audio.src = url
+    audio.onloadedmetadata = () => {
+      isLoadingTts.value = false
+    }
+    audio.ontimeupdate = () => {
+      if (!audio || !audio.duration || isNaN(audio.duration)) return
+      playProgress.value = Math.min(1, Math.max(0, audio.currentTime / audio.duration))
+    }
+    audio.onended = () => stopAudio()
+    audio.onerror = () => {
+      errorMsg.value = 'TTS failed'
+      stopAudio()
+    }
+    await audio.play()
+    isPlaying.value = true
+    isPaused.value = false
+  } catch (e) {
+    errorMsg.value = e instanceof Error ? e.message : 'TTS failed'
+    stopAudio()
+  }
+}
+function togglePauseResumeJoiner() {
+  if (!audio || playingIdx.value === null) return
+  if (isPaused.value) {
+    audio.play().catch(() => {})
+    isPaused.value = false
+    isPlaying.value = true
+  } else {
+    audio.pause()
+    isPaused.value = true
+    isPlaying.value = false
+  }
+}
 
 async function load() {
   loading.value = true
@@ -57,6 +144,10 @@ async function load() {
         } catch {}
         msgs.value = await messagesApi.list(channelId.value)
         await messagesApi.markRead(channelId.value)
+        // 初始化選取到最新一則（索引 0）並滾入可視範圍
+        selectedIdx.value = 0
+        await nextTick()
+        scrollSelectedIntoViewJoiner()
       } catch {}
     }
   } catch (e: unknown) {
@@ -138,14 +229,28 @@ function onKey(e: KeyboardEvent) {
     e.preventDefault()
     return
   }
-  // 加入者為唯讀：提供上下鍵滾動訊息列表
+  // 加入者為唯讀：上下鍵選擇訊息；Enter 播放/暫停；空白鍵暫停/繼續
   if (!isOwnerRef.value) {
+    if (msgs.value.length === 0) return
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      const el = messagesRef.value
-      if (!el) return
       e.preventDefault()
-      const delta = e.key === 'ArrowDown' ? 24 : -24
-      el.scrollTop = Math.max(0, el.scrollTop + delta)
+      const dir = e.key === 'ArrowDown' ? 1 : -1
+      selectedIdx.value = (selectedIdx.value + dir + msgs.value.length) % msgs.value.length
+      nextTick(scrollSelectedIntoViewJoiner)
+      return
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      if (playingIdx.value === selectedIdx.value) togglePauseResumeJoiner()
+      else playSelectedJoiner()
+      return
+    }
+    if (e.key === ' ') {
+      if (playingIdx.value !== null) {
+        e.preventDefault()
+        togglePauseResumeJoiner()
+      }
+      return
     }
     return
   }
@@ -207,6 +312,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKey)
   ui.closeMenu()
   ui.setSoftkeys(null)
+  stopAudio()
 })
 </script>
 
@@ -292,7 +398,7 @@ onBeforeUnmount(() => {
         <!-- 加入者：唯讀訊息列表（類似歷史頁） -->
         <template v-else>
           <div ref="messagesRef" class="flex-1 min-h-0 overflow-auto space-y-3">
-            <div v-for="(m, idx) in msgs" :key="m.id">
+            <div v-for="(m, idx) in msgs" :key="m.id" :ref="itemRefSetter(idx)">
               <!-- 分隔線：未讀與已讀的邊界（清單為新到舊，未讀在前） -->
               <div
                 v-if="unreadCountRef > 0 && idx === unreadCountRef"
@@ -305,9 +411,10 @@ onBeforeUnmount(() => {
 
               <div
                 class="rounded px-2 py-2 leading-[1.35] break-words text-white relative"
-                :class="
-                  idx < unreadCountRef ? 'bg-amber-300/20 ring-1 ring-amber-300' : 'bg-white/15'
-                "
+                :class="[
+                  idx < unreadCountRef ? 'bg-amber-300/20 ring-1 ring-amber-300' : 'bg-white/15',
+                  selectedIdx === idx ? 'ring-2 ring-white/70' : '',
+                ]"
               >
                 <div class="opacity-75 text-[10px] mb-0.5">
                   {{ new Date(m.createdAt).toLocaleString() }}
@@ -322,9 +429,35 @@ onBeforeUnmount(() => {
                   class="absolute top-1 right-1 bg-amber-400 text-black text-[10px] rounded px-1 py-0.5"
                   >NEW</span
                 >
+                <!-- 播放中進度條與狀態 -->
+                <div
+                  v-if="playingIdx === idx"
+                  class="absolute left-1 right-1 bottom-1 h-1.5 rounded-full overflow-hidden bg-white/20 backdrop-blur-[1px]"
+                >
+                  <div
+                    v-if="!isLoadingTts && playProgress > 0 && playProgress <= 1"
+                    class="h-full rounded-full bg-gradient-to-r from-emerald-300 via-cyan-300 to-blue-300 transition-[width] duration-150 ease-linear shadow-[0_0_8px_rgba(255,255,255,0.35)]"
+                    :style="{ width: (playProgress * 100).toFixed(2) + '%' }"
+                  ></div>
+                  <div
+                    v-else
+                    class="h-full animate-progressIndeterminate bg-gradient-to-r from-white/30 via-white/70 to-white/30"
+                    style="width: 35%"
+                  ></div>
+                </div>
+                <div v-if="playingIdx === idx" class="absolute top-1 right-1 text-[10px]">
+                  <span
+                    :class="[
+                      'inline-flex items-center justify-center w-4 h-4 rounded-full',
+                      isPaused ? 'bg-white/30' : 'bg-emerald-300 text-black',
+                    ]"
+                    >{{ isPaused ? '⏸' : '▶' }}</span
+                  >
+                </div>
               </div>
             </div>
             <div v-if="msgs.length === 0" class="opacity-80">No messages yet.</div>
+            <div v-if="errorMsg" class="text-red-200 text-xs">{{ errorMsg }}</div>
           </div>
         </template>
       </template>
@@ -383,5 +516,19 @@ onBeforeUnmount(() => {
 .markdown-body :deep(h6) {
   margin: 0.25rem 0 0.125rem; /* small top/bottom */
   font-size: 1em; /* keep same size as body */
+}
+</style>
+
+<style scoped>
+@keyframes progressIndeterminate {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+.animate-progressIndeterminate {
+  animation: progressIndeterminate 1.2s infinite linear;
 }
 </style>

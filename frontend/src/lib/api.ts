@@ -93,3 +93,12 @@ export const emojiApi = {
       body: JSON.stringify({ favoriteEmojis }),
     }),
 }
+
+// TTS API
+export const ttsApi = {
+  synthesize: (text: string, voice?: string, messageId?: string) =>
+    apiFetch<{ url: string; file: string }>(`/api/tts`, {
+      method: 'POST',
+      body: JSON.stringify({ text, voice, messageId }),
+    }),
+}

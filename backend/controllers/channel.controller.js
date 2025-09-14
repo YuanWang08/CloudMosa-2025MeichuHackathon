@@ -5,6 +5,7 @@ const {
   ChannelMembership,
   ChannelMessage,
   ChannelQuickReply,
+  User,
 } = require("../models/associations");
 
 function genCode() {
@@ -97,6 +98,18 @@ exports.joined = async (req, res) => {
       },
       include: [
         { model: ChannelMembership, where: { userId }, required: true },
+        {
+          model: User,
+          as: "owner",
+          attributes: [
+            "id",
+            "username",
+            "avatarImage",
+            "avatarInitials",
+            "avatarColor",
+          ],
+          required: false,
+        },
       ],
       order: [
         [sequelize.literal(lastMsgTimeSql), "DESC NULLS LAST"],

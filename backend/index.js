@@ -9,6 +9,7 @@ const indexRouter = require("./routes/index.route");
 const authRouter = require("./routes/auth.route");
 const channelRouter = require("./routes/channel.route");
 const { initDb, sequelize } = require("./config/database");
+const ttsRouter = require("./routes/tts.route");
 require("./models/associations");
 
 const port = process.env.PORT || 3001;
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/api", indexRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/channels", channelRouter);
+app.use("/api/tts", ttsRouter);
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
