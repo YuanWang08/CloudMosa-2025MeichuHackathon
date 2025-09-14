@@ -158,7 +158,20 @@ exports.details = async (req, res) => {
   try {
     const { id } = req.params;
     const ch = await Channel.findByPk(id, {
-      include: [{ model: ChannelQuickReply }],
+      include: [
+        { model: ChannelQuickReply },
+        {
+          model: User,
+          as: "owner",
+          attributes: [
+            "id",
+            "username",
+            "avatarImage",
+            "avatarInitials",
+            "avatarColor",
+          ],
+        },
+      ],
     });
     if (!ch) return res.status(404).json({ message: "Not found" });
     res.json(ch);
