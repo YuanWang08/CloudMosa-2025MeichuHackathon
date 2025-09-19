@@ -75,7 +75,11 @@
     "enable": "啟用 SMS",
     "phoneNumber": "電話號碼",
     "typeToFilter": "輸入以篩選",
-    "enterNumbers": "輸入數字…"
+    "enterNumbers": "輸入數字…",
+    "schedules": "排程",
+    "editTime": "設定時間",
+    "timezone": "時區",
+    "change": "變更"
   },
   "languages": {
     "en": "English",

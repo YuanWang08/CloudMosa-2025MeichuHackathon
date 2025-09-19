@@ -3,6 +3,7 @@ const Channel = require("./Channel");
 const ChannelMembership = require("./ChannelMembership");
 const ChannelMessage = require("./ChannelMessage");
 const ChannelQuickReply = require("./ChannelQuickReply");
+const SmsSetting = require("./SmsSetting");
 
 // Ownership
 Channel.belongsTo(User, { as: "owner", foreignKey: "ownerId" });
@@ -33,4 +34,5 @@ module.exports = {
   ChannelMembership,
   ChannelMessage,
   ChannelQuickReply,
+  SmsSetting,
 };
