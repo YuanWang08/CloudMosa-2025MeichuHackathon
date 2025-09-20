@@ -3,10 +3,12 @@ import { onBeforeUnmount, onMounted, ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { channelsApi } from '@/lib/api'
 import { useUiStore } from '@/stores/ui'
+import { useAuthStore } from '@/stores/auth'
 import { useDisableMenu } from '@/composables/useDisableMenu'
 
 const router = useRouter()
 const ui = useUiStore()
+const auth = useAuthStore()
 const title = ref('')
 const allowJoin = ref(true)
 const qr1 = ref('')
@@ -24,9 +26,42 @@ const qr2Ref = ref<HTMLInputElement | null>(null)
 const qr3Ref = ref<HTMLInputElement | null>(null)
 const submitRef = ref<HTMLButtonElement | null>(null)
 
-const fields = [titleRef, allowRef, qr1Ref, qr2Ref, qr3Ref, submitRef]
+const templateOptions = [
+  {
+    key: 'elder',
+    label: 'Elder Template',
+    quickReplies: ['已吃藥，身體無異狀', '我很好，請放心', '我找不到我的藥'],
+  },
+  {
+    key: 'child',
+    label: 'Child Template',
+    quickReplies: ['我到學校了！', '我到家了！', '爸比媽咪救我！'],
+  },
+  { key: 'custom', label: 'Custom', quickReplies: ['', '', ''] },
+]
+
+const templateRefs = templateOptions.map(() => ref<HTMLButtonElement | null>(null))
+const selectedTemplate = ref<string>('custom')
+
+const fields = [...templateRefs, titleRef, allowRef, qr1Ref, qr2Ref, qr3Ref, submitRef]
 
 useDisableMenu()
+
+function templateRefSetter(idx: number) {
+  return (el: unknown) => {
+    templateRefs[idx].value = (el as HTMLButtonElement) || null
+  }
+}
+
+function applyTemplate(key: string) {
+  const tpl = templateOptions.find((t) => t.key === key)
+  selectedTemplate.value = key
+  if (!tpl) return
+  const [q1, q2, q3] = tpl.quickReplies
+  qr1.value = q1 || ''
+  qr2.value = q2 || ''
+  qr3.value = q3 || ''
+}
 
 function focusAt(i: number) {
   focusIndex.value = (i + fields.length) % fields.length
@@ -36,6 +71,33 @@ function focusAt(i: number) {
 
 function onKey(e: KeyboardEvent) {
   if (ui.confirmOpen || ui.menuOpen) return
+  if (templateRefs.some((r, idx) => fields[focusIndex.value] === r)) {
+    const tplIdx = templateRefs.findIndex((r) => fields[focusIndex.value] === r)
+    if (tplIdx >= 0) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault()
+        const dir = e.key === 'ArrowRight' ? 1 : -1
+        const next = (tplIdx + dir + templateRefs.length) % templateRefs.length
+        focusAt(next)
+        return
+      }
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        applyTemplate(templateOptions[tplIdx].key)
+        return
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        focusAt(templateRefs.length)
+        return
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        focusAt(templateRefs.length - 1)
+        return
+      }
+    }
+  }
   if (e.key === 'ArrowDown') {
     e.preventDefault()
     focusAt(focusIndex.value + 1)
@@ -64,6 +126,9 @@ function onKey(e: KeyboardEvent) {
 }
 
 onMounted(async () => {
+  const defaultTitle = auth.user?.username ? `${auth.user.username}'s Channel` : "User's Channel"
+  title.value = defaultTitle
+  applyTemplate('custom')
   await nextTick()
   focusAt(0)
   window.addEventListener('keydown', onKey)
@@ -92,9 +157,29 @@ async function createChannel() {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-tr from-yellow-200 via-orange-200 to-blue-200 text-white"
+    class="h-full flex flex-col bg-gradient-to-tr from-yellow-200 via-orange-200 to-blue-200 text-black"
   >
     <div class="flex-1 content-scroll p-2 text-sm space-y-2">
+      <div>
+        <div class="text-xs opacity-80">Template</div>
+        <div class="flex gap-2 mt-1">
+          <button
+            v-for="(tpl, idx) in templateOptions"
+            :key="tpl.key"
+            :ref="templateRefSetter(idx)"
+            class="px-2 py-1 rounded border text-xs"
+            :class="
+              selectedTemplate === tpl.key
+                ? 'bg-white text-black border-white shadow'
+                : 'bg-white/40 text-black/80 border-transparent'
+            "
+            @click="applyTemplate(tpl.key)"
+            @focus="focusIndex = idx"
+          >
+            {{ tpl.label }}
+          </button>
+        </div>
+      </div>
       <label class="text-xs">Title</label>
       <input
         ref="titleRef"
@@ -134,7 +219,7 @@ async function createChannel() {
       >
         Create
       </button>
-      <div v-if="error" class="text-rose-200">{{ error }}</div>
+      <div v-if="error" class="text-rose-600">{{ error }}</div>
     </div>
   </div>
 </template>
