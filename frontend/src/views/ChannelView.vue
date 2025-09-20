@@ -265,10 +265,22 @@ function onKey(e: KeyboardEvent) {
   }
   // 快速輸入開關：0 或 S 鍵切換
   if (e.key === '0' || e.key === 's' || e.key === 'S') {
-    e.preventDefault()
-    quickInputEnabled.value = !quickInputEnabled.value
-    nextTick(() => textareaRef.value?.focus())
-    return
+    const active = document.activeElement
+    const isTextareaFocused = active === textareaRef.value
+    if (!isTextareaFocused) {
+      e.preventDefault()
+      quickInputEnabled.value = !quickInputEnabled.value
+      nextTick(() => textareaRef.value?.focus())
+      return
+    }
+    if (e.key !== '0') {
+      // 保留 S 快捷，僅在輸入框聚焦時跳過 0 的開關
+      e.preventDefault()
+      quickInputEnabled.value = !quickInputEnabled.value
+      nextTick(() => textareaRef.value?.focus())
+      return
+    }
+    // 若輸入框聚焦且按下 0，允許輸入 0
   }
 
   // 在 owner 模式下，提供上下鍵在輸入框與 Send 按鈕之間移動焦點
