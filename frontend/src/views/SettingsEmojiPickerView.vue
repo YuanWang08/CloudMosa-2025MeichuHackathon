@@ -4,11 +4,14 @@ import { useRoute, useRouter } from 'vue-router'
 import { emojiApi, type EmojiCatalog } from '@/lib/api'
 import { useUiStore } from '@/stores/ui'
 import { useAuthStore } from '@/stores/auth'
+import { useDisableMenu } from '@/composables/useDisableMenu'
 
 const route = useRoute()
 const router = useRouter()
 const ui = useUiStore()
 const auth = useAuthStore()
+
+useDisableMenu()
 
 const slotIndex = Number(route.query.slot || 0)
 const loading = ref(true)

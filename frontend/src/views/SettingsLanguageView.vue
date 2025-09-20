@@ -2,11 +2,14 @@
 import { onMounted, onBeforeUnmount, ref, nextTick } from 'vue'
 import { setLocale, SUPPORT_LOCALES } from '@/i18n'
 import { useUiStore } from '@/stores/ui'
+import { useDisableMenu } from '@/composables/useDisableMenu'
 
 const ui = useUiStore()
 const options = SUPPORT_LOCALES
 const active = ref(0)
 const itemRefs = ref<Array<HTMLButtonElement | null>>([])
+
+useDisableMenu()
 
 function setRef(el: HTMLButtonElement | null, idx: number) {
   itemRefs.value[idx] = el
