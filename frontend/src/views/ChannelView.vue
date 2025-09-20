@@ -380,6 +380,13 @@ function onKey(e: KeyboardEvent) {
 
     if (!isEditing.value) {
       if (e.key === 'Enter') {
+        if (sendFocused) {
+          if (input.value.trim()) {
+            e.preventDefault()
+            send()
+          }
+          return
+        }
         e.preventDefault()
         startEditing()
         return
