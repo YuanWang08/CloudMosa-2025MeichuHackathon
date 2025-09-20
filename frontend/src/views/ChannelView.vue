@@ -28,6 +28,7 @@ const itemRefs = ref<Array<HTMLElement | null>>([])
 const sentOverlay = ref(false)
 const quickInputEnabled = ref(true)
 const isOwnerRef = ref<boolean | undefined>(undefined)
+const isEditing = ref(false)
 
 const defaultQuick = ['✅', '❌', '⏰', '📢', '👍', '😢']
 const quickEmojis = computed(() => {
@@ -35,6 +36,52 @@ const quickEmojis = computed(() => {
   return favs && favs.length === 6 ? favs : defaultQuick
 })
 const customQuick = computed(() => ch.value?.ChannelQuickReplies ?? [])
+
+function startEditing(initialChar?: string) {
+  if (!isOwnerRef.value) return
+  if (!isEditing.value) {
+    isEditing.value = true
+    nextTick(() => {
+      const el = textareaRef.value
+      if (!el) return
+      el.focus()
+      if (initialChar) {
+        const start = el.selectionStart ?? el.value.length
+        const end = el.selectionEnd ?? start
+        el.setRangeText(initialChar, start, end, 'end')
+        input.value = el.value
+      } else {
+        const len = el.value.length
+        el.setSelectionRange(len, len)
+      }
+    })
+  } else {
+    nextTick(() => {
+      const el = textareaRef.value
+      if (!el) return
+      el.focus()
+      if (initialChar) {
+        const start = el.selectionStart ?? el.value.length
+        const end = el.selectionEnd ?? start
+        el.setRangeText(initialChar, start, end, 'end')
+        input.value = el.value
+      }
+    })
+  }
+}
+
+function stopEditing() {
+  if (!isOwnerRef.value) return
+  if (!isEditing.value) return
+  isEditing.value = false
+  const el = textareaRef.value
+  if (el) {
+    el.blur()
+  }
+  if (sendBtnRef.value && !sendBtnRef.value.disabled) {
+    sendBtnRef.value.focus()
+  }
+}
 
 // Owner info for header
 const owner = computed(() => ch.value?.owner)
@@ -164,7 +211,7 @@ async function load() {
   } finally {
     loading.value = false
     await nextTick()
-    if (isOwnerRef.value) textareaRef.value?.focus()
+    if (isOwnerRef.value) startEditing()
     // 初始化軟鍵
     updateSoftkeys()
   }
@@ -192,9 +239,17 @@ async function send(text?: string) {
 }
 
 function insertText(text: string) {
+  if (!isOwnerRef.value) return
+  if (!isEditing.value) startEditing()
   // 快捷輸入：不自動加空格，直接附加文字
   input.value = input.value + text
-  nextTick(() => textareaRef.value?.focus())
+  nextTick(() => {
+    const el = textareaRef.value
+    if (!el) return
+    el.focus()
+    const len = el.value.length
+    el.setSelectionRange(len, len)
+  })
 }
 
 function useQuick(q: string) {
@@ -209,6 +264,12 @@ function updateSoftkeys() {
   }
   // 擁有者：RSK 一律為 Back；若有輸入內容則詢問捨棄
   ui.setSoftkeys({
+    leftLabel: isEditing.value ? 'Done' : 'Edit',
+    showLeft: true,
+    onLeft: () => {
+      if (isEditing.value) stopEditing()
+      else startEditing()
+    },
     rightLabel: 'Back',
     showRight: true,
     onRight: async () => {
@@ -216,6 +277,7 @@ function updateSoftkeys() {
         const ok = await ui.openConfirm(t('menu.confirmBackDiscard'))
         if (!ok) return
       }
+      stopEditing()
       router.back()
     },
   })
@@ -230,7 +292,7 @@ watch(
 )
 
 // 監聽輸入與 owner 狀態變化，動態更新軟鍵
-watch([input, isOwnerRef], () => updateSoftkeys())
+watch([input, isOwnerRef, isEditing], () => updateSoftkeys())
 
 function onKey(e: KeyboardEvent) {
   // 若顯示成功覆蓋層，阻擋其他按鍵
@@ -263,53 +325,96 @@ function onKey(e: KeyboardEvent) {
     }
     return
   }
-  // 快速輸入開關：0 或 S 鍵切換
-  if (e.key === '0' || e.key === 's' || e.key === 'S') {
-    e.preventDefault()
-    quickInputEnabled.value = !quickInputEnabled.value
-    nextTick(() => textareaRef.value?.focus())
-    return
-  }
+  if (isOwnerRef.value) {
+    const textareaEl = textareaRef.value
+    const activeEl = document.activeElement as HTMLElement | null
+    const textareaFocused = Boolean(textareaEl && activeEl === textareaEl)
+    const sendFocused = activeEl === sendBtnRef.value
+    const bodyFocused = activeEl === document.body
 
-  // 在 owner 模式下，提供上下鍵在輸入框與 Send 按鈕之間移動焦點
-  if (isOwnerRef.value && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
-    const active = document.activeElement as HTMLElement | null
-    if (e.key === 'ArrowDown' && active === textareaRef.value) {
-      e.preventDefault()
-      sendBtnRef.value?.focus()
-      return
+    if (!isEditing.value && textareaFocused) {
+      isEditing.value = true
     }
-    if (e.key === 'ArrowUp' && active === sendBtnRef.value) {
-      e.preventDefault()
-      textareaRef.value?.focus()
-      return
+    if (isEditing.value && !textareaFocused && !sendFocused) {
+      isEditing.value = false
     }
-  }
 
-  // 數字鍵 1~9 對應預設與自訂 quick replies（僅在開啟快速輸入時）
-  if (ui.confirmOpen || ui.menuOpen) return
-  if (quickInputEnabled.value && e.key >= '1' && e.key <= '9') {
-    const n = Number(e.key)
-    if (n >= 1 && n <= 6) {
+    if (isEditing.value && e.key === 'Escape') {
       e.preventDefault()
-      insertText(quickEmojis.value[n - 1])
+      stopEditing()
       return
     }
-    if (n >= 7 && n <= 9) {
-      const qr = customQuick.value.find((q) => q.index === n)
-      if (qr) {
+
+    if (e.key === '0') {
+      if (!isEditing.value) {
         e.preventDefault()
-        insertText(qr.text)
+        quickInputEnabled.value = !quickInputEnabled.value
+        return
+      }
+    } else if (e.key === 's' || e.key === 'S') {
+      e.preventDefault()
+      quickInputEnabled.value = !quickInputEnabled.value
+      if (isEditing.value) startEditing()
+      return
+    }
+
+    if (e.key === 'ArrowDown') {
+      if (isEditing.value && textareaFocused) {
+        e.preventDefault()
+        stopEditing()
+        return
+      }
+    } else if (e.key === 'ArrowUp') {
+      if (!isEditing.value && (sendFocused || bodyFocused)) {
+        e.preventDefault()
+        startEditing()
         return
       }
     }
-  }
-  if (e.key === 'Enter') {
-    // Enter 預設送出（若有內容）
-    if (input.value.trim()) {
-      e.preventDefault()
-      send()
+
+    if (!isEditing.value) {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        startEditing()
+        return
+      }
+      const isPrintable =
+        e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey
+      const isQuickDigit = quickInputEnabled.value && e.key >= '1' && e.key <= '9'
+      if (isPrintable && !isQuickDigit) {
+        e.preventDefault()
+        startEditing(e.key)
+        return
+      }
     }
+
+    if (ui.confirmOpen || ui.menuOpen) return
+
+    if (quickInputEnabled.value && e.key >= '1' && e.key <= '9') {
+      const n = Number(e.key)
+      if (n >= 1 && n <= 6) {
+        e.preventDefault()
+        insertText(quickEmojis.value[n - 1])
+        return
+      }
+      if (n >= 7 && n <= 9) {
+        const qr = customQuick.value.find((q) => q.index === n)
+        if (qr) {
+          e.preventDefault()
+          insertText(qr.text)
+          return
+        }
+      }
+    }
+
+    if (e.key === 'Enter') {
+      if (isEditing.value && input.value.trim()) {
+        e.preventDefault()
+        send()
+      }
+      return
+    }
+    return
   }
 }
 
@@ -368,7 +473,7 @@ onBeforeUnmount(() => {
           <textarea
             ref="textareaRef"
             v-model="input"
-            class="w-full rounded p-1 text-sm text-black"
+            class="w-full rounded border-2 border-white/80 bg-white/95 p-2 text-sm text-black shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-300"
             rows="3"
             placeholder="Type your message"
           />
