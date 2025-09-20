@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useUiStore } from '@/stores/ui'
 import { useI18n } from 'vue-i18n'
 import { smsApi, type SmsSchedule, type SmsSettings } from '@/lib/api'
+import { useDisableMenu } from '@/composables/useDisableMenu'
 
 const ui = useUiStore()
 const { t } = useI18n()
@@ -12,6 +13,8 @@ const enableCard = ref<HTMLDivElement | null>(null)
 const codePhoneCard = ref<HTMLDivElement | null>(null)
 const schedulesCard = ref<HTMLDivElement | null>(null)
 const timezoneCard = ref<HTMLDivElement | null>(null)
+
+useDisableMenu()
 
 function scrollFocusedIntoView() {
   const targets = [

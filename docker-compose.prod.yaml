@@ -86,6 +86,9 @@ services:
       - ./backend:/app
       - /app/node_modules
     restart: unless-stopped
+    networks:
+      - default
+      - nginx-bridge
 
   frontend:
     build:
@@ -102,6 +105,9 @@ services:
       - ./frontend:/app
       - /app/node_modules
     restart: unless-stopped
+    networks:
+      - default
+      - nginx-bridge
 
 networks:
   default:

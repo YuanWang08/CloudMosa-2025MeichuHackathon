@@ -3,10 +3,13 @@ import { ref, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useUiStore } from '@/stores/ui'
 import { useI18n } from 'vue-i18n'
+import { useDisableMenu } from '@/composables/useDisableMenu'
 
 const auth = useAuthStore()
 const ui = useUiStore()
 const { t } = useI18n()
+
+useDisableMenu()
 
 // 顯示資料
 const username = ref(auth.user?.username || '')
@@ -226,34 +229,33 @@ async function randomizeAvatar() {
         <div class="grid grid-cols-[auto,auto,1fr,auto] items-center gap-2">
           <div class="flex items-center justify-center">
             <div
-  ref="avatarRef"
-  tabindex="-1"
-  class="flex items-center justify-center"
-  :class="focus === 0 ? 'ring-2 ring-black/50' : ''"
->
-  <button class="px-1 py-1 text-black focus:font-bold" :disabled="!avatarList.length">
-    <
-  </button>
-  <div class="w-10 h-10 aspect-square shrink-0 mx-1">
-    <img
-      v-if="avatarImage"
-      :src="`/avatars/${avatarImage}`"
-      alt="avatar"
-      class="w-full h-full rounded-full object-cover"
-    />
-    <div
-      v-else
-      class="w-full h-full rounded-full flex items-center justify-center text-white font-bold"
-      :style="{ backgroundColor: avatarColor }"
-    >
-      {{ avatarInitials }}
-    </div>
-  </div>
-  <button class="px-1 py-1 text-black font-bold" :disabled="!avatarList.length">
-    >
-  </button>
-</div>
-
+              ref="avatarRef"
+              tabindex="-1"
+              class="flex items-center justify-center"
+              :class="focus === 0 ? 'ring-2 ring-black/50' : ''"
+            >
+            <button class="px-1 py-1 text-black focus:font-bold" :disabled="!avatarList.length">
+              <
+            </button>
+            <div class="w-10 h-10 aspect-square shrink-0 mx-1">
+              <img
+                v-if="avatarImage"
+                :src="`/avatars/${avatarImage}`"
+                alt="avatar"
+                class="w-full h-full rounded-full object-cover"
+              />
+              <div
+                v-else
+                class="w-full h-full rounded-full flex items-center justify-center text-white font-bold"
+                :style="{ backgroundColor: avatarColor }"
+              >
+                {{ avatarInitials }}
+              </div>
+            </div>
+            <button class="px-1 py-1 text-black font-bold" :disabled="!avatarList.length">
+              >
+            </button>
+          </div>
           </div>
           <div class="min-w-0">
             <div class="text-[12px] font-bold opacity-60 mb-1.5">{{ t('profile.username') }}</div>
@@ -261,7 +263,8 @@ async function randomizeAvatar() {
               ref="usernameRef"
               tabindex="-1"
               class="rounded bg-white border px-2 py-1 min-h-[28px] overflow-hidden text-ellipsis whitespace-nowrap focus:outline-none"
-              :class="focus === 1 ? 'ring-2 ring-black/50' : ''"
+
+              :class="focus === 0 ? 'ring-2 ring-black/50' : ''"
             >
               {{ username || t('profile.usernameHint') }}
             </div>

@@ -5,6 +5,12 @@ import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
+const allowedHosts =
+  (process.env.VITE_ALLOWED_HOSTS || 'hackathon-wc0l3p.puffin.app,frontend')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean)
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), vueDevTools(), tailwindcss()],
@@ -14,6 +20,7 @@ export default defineConfig({
     },
   },
   server: {
+    allowedHosts,
     proxy: {
       '/api': {
         target: process.env.VITE_API_URL || 'http://localhost:3001',
@@ -24,5 +31,7 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    host: true,
+    port: 5173,
   },
 })
