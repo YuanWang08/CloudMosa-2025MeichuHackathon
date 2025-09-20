@@ -3,6 +3,7 @@ import { onBeforeUnmount, onMounted, ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { channelsApi } from '@/lib/api'
 import { useUiStore } from '@/stores/ui'
+import { useDisableMenu } from '@/composables/useDisableMenu'
 
 const router = useRouter()
 const ui = useUiStore()
@@ -24,6 +25,8 @@ const qr3Ref = ref<HTMLInputElement | null>(null)
 const submitRef = ref<HTMLButtonElement | null>(null)
 
 const fields = [titleRef, allowRef, qr1Ref, qr2Ref, qr3Ref, submitRef]
+
+useDisableMenu()
 
 function focusAt(i: number) {
   focusIndex.value = (i + fields.length) % fields.length

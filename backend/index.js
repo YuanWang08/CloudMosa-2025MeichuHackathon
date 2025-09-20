@@ -19,6 +19,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/api/tts", express.static(path.join(__dirname, "public", "tts")));
 app.use(cookieParser());
 app.use(logger("dev"));
 app.use(express.json());
