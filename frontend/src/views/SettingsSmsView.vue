@@ -363,7 +363,7 @@ function toggleSlot(idx: number) {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-tr from-pink-200 via-yellow-100 to-lime-200 text-black relative"
+    class="h-full flex flex-col bg-gradient-to-br from-pink-200 via-yellow-100 to-lime-200 text-black relative"
   >
     <div ref="scrollBox" class="flex-1 p-2 text-sm space-y-2 overflow-y-auto overflow-x-hidden">
       <!-- Enable -->

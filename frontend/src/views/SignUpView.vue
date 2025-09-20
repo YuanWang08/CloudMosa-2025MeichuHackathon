@@ -102,37 +102,37 @@ async function onSubmit() {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-b from-cyan-500 via-violet-500 to-fuchsia-500 text-white"
+    class="h-full flex flex-col bg-gradient-to-b from-yellow-100 via-green-100 to-blue-200 text-white"
   >
-    <div class="flex-1 p-3 flex flex-col gap-2">
-      <label class="text-xs">{{ t('auth.username') }}</label>
+    <div class="flex-1 p-4 flex flex-col gap-1">
+      <label class="text-sm text-black/60 font-semibold">{{ t('auth.username') }}</label>
       <input
         ref="userRef"
         v-model="username"
-        class="rounded px-2 py-1 text-black text-sm"
+        class="rounded bg-/70 px-2 py-1 text-black text-xs border border-black/20"
         :placeholder="t('auth.usernamePlaceholder')"
       />
-      <label class="text-xs">{{ t('auth.password') }}</label>
+      <label class="text-sm text-black/60 font-semibold">{{ t('auth.password') }}</label>
       <input
         ref="passRef"
         v-model="password"
         type="password"
-        class="rounded px-2 py-1 text-black text-sm"
+        class="rounded bg-/70 px-2 py-1 text-black text-xs border border-black/20"
         :placeholder="t('auth.passwordPlaceholder')"
       />
-      <p v-if="err" class="text-xs text-yellow-200">{{ err }}</p>
+      <p v-if="err" class="text-xs text-rose-400">{{ err }}</p>
       <button
         ref="signupRef"
         :disabled="loading"
         @click="onSubmit"
-        class="mt-2 bg-amber-300 hover:bg-amber-400 active:bg-amber-500 text-black rounded py-1 text-sm"
+        class="mt-5 bg-orange-300 focus:bg-orange-400 text-white rounded py-1 text-sm"
       >
         {{ loading ? t('common.loading') : t('auth.signUp') }}
       </button>
       <button
         ref="signinRef"
         @click="router.push('/signin')"
-        class="bg-white/20 hover:bg-white/30 rounded py-1 text-sm"
+        class="mt-1 bg-white/60 focus:bg-black/10 rounded py-1 text-yellow-500 hover:text-yellow-400 text-sm"
       >
         {{ t('auth.toSignIn') }}
       </button>

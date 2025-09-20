@@ -291,16 +291,16 @@ async function onMenuAction({ type }: { type: string }) {
         class="shrink-0 p-2 text-center text-base text-neutral-100 bg-neutral-700 border-b"
       >
         <template v-if="route.path.startsWith('/settings/language')">
-          <div class="text-base font-semibold">{{ t('headers.language') }}</div>
+          <div class="text-base font-bold">{{ t('headers.language') }}</div>
         </template>
         <template v-else-if="route.path.startsWith('/settings/sms')">
-          <div class="text-base font-semibold">{{ t('headers.sms') }}</div>
+          <div class="text-base font-bold">{{ t('headers.sms') }}</div>
         </template>
         <template v-else-if="route.path.startsWith('/settings/profile')">
-          <div class="text-base font-semibold">{{ t('headers.profile') }}</div>
+          <div class="text-base font-bold">{{ t('headers.profile') }}</div>
         </template>
         <template v-else-if="route.path.startsWith('/settings')">
-          <div class="text-base font-semibold">{{ t('headers.settings') }}</div>
+          <div class="text-base font-bold">{{ t('headers.settings') }}</div>
         </template>
         <template v-else>
           <nav class="flex items-center justify-center gap-6 truncate">

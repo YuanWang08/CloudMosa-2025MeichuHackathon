@@ -81,15 +81,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           :key="c.id"
           :ref="(el) => setItemRef(el as HTMLElement | null, idx)"
           class="rounded p-2 flex items-center justify-between"
-          :class="activeIndex === idx ? 'bg-white/25 ring-1 ring-white/50' : 'bg-white/15'"
+          :class="activeIndex === idx ? 'bg-white/50 ring-1 ring-white/50 font-semibold text-black/70' : 'bg-white/15 text-black/20'"
+          @click="openChannel(c.id)"
         >
           <span class="truncate">{{ c.title }}</span>
-          <button
-            class="bg-amber-300 text-black rounded px-2 py-1 text-xs"
-            @click="openChannel(c.id)"
-          >
-            Open
-          </button>
         </li>
         <li v-if="mine.length === 0" class="opacity-80">No channels. Create one from Home.</li>
       </ul>
