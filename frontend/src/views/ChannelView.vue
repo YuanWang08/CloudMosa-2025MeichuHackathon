@@ -368,7 +368,7 @@ onBeforeUnmount(() => {
           <textarea
             ref="textareaRef"
             v-model="input"
-            class="w-full rounded p-1 text-sm text-black"
+            class="w-full rounded border-2 border-white/80 bg-white/95 p-2 text-sm text-black shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-300"
             rows="3"
             placeholder="Type your message"
           />
