@@ -238,18 +238,21 @@ async function send(text?: string) {
   }
 }
 
-function insertText(text: string) {
+function insertText(text: string, opts: { focus?: boolean } = {}) {
   if (!isOwnerRef.value) return
-  if (!isEditing.value) startEditing()
+  const shouldFocus = opts.focus !== false
+  if (shouldFocus && !isEditing.value) startEditing()
   // 快捷輸入：不自動加空格，直接附加文字
   input.value = input.value + text
-  nextTick(() => {
-    const el = textareaRef.value
-    if (!el) return
-    el.focus()
-    const len = el.value.length
-    el.setSelectionRange(len, len)
-  })
+  if (shouldFocus) {
+    nextTick(() => {
+      const el = textareaRef.value
+      if (!el) return
+      el.focus()
+      const len = el.value.length
+      el.setSelectionRange(len, len)
+    })
+  }
 }
 
 function useQuick(q: string) {
@@ -397,14 +400,14 @@ function onKey(e: KeyboardEvent) {
       const n = Number(e.key)
       if (n >= 1 && n <= 6) {
         e.preventDefault()
-        insertText(quickEmojis.value[n - 1])
+        insertText(quickEmojis.value[n - 1], { focus: false })
         return
       }
       if (n >= 7 && n <= 9) {
         const qr = customQuick.value.find((q) => q.index === n)
         if (qr) {
           e.preventDefault()
-          insertText(qr.text)
+          insertText(qr.text, { focus: false })
           return
         }
       }
@@ -530,7 +533,7 @@ onBeforeUnmount(() => {
                   class="rounded px-2 py-0.5"
                   >{{ quickInputEnabled ? 'ON' : 'OFF' }}</span
                 >
-                <span class="opacity-80">Press 0 or S to toggle</span>
+                <span class="opacity-80">Press 0 to toggle</span>
               </div>
             </div>
           </div>
