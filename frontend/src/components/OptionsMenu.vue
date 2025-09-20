@@ -80,7 +80,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           v-for="(it, idx) in items"
           :key="it.key"
           class="px-3 py-2 border-b last:border-b-0"
-          :class="idx === activeIndex ? 'bg-neutral-100' : ''"
+          :class="idx === activeIndex ? 'underline underline-offset-4 decoration-2' : ''"
           @click="onPick(it.key)"
         >
           {{ it.label }}

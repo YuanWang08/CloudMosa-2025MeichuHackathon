@@ -103,6 +103,12 @@ services:
       - /app/node_modules
     restart: unless-stopped
 
+networks:
+  default:
+  nginx-bridge:
+    name: nginx-bridge
+    external: true
+
 volumes:
   pg_data:
   redis_data:
