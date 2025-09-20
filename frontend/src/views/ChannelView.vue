@@ -301,6 +301,7 @@ watch(
 watch([input, isOwnerRef, isEditing], () => updateSoftkeys())
 
 function onKey(e: KeyboardEvent) {
+  if (ui.confirmOpen || ui.menuOpen) return
   // 若顯示成功覆蓋層，阻擋其他按鍵
   if (sentOverlay.value) {
     e.preventDefault()
