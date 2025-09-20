@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref, watch, nextTick } from 'vue'
 import { useUiStore } from '@/stores/ui'
 import { useI18n } from 'vue-i18n'
 
@@ -42,10 +42,23 @@ function onPick(key: string) {
 }
 
 const activeIndex = ref(0)
+const listRef = ref<HTMLUListElement | null>(null)
+const itemRefs = ref<Array<HTMLLIElement | null>>([])
+
+function setItemRef(el: HTMLLIElement | null, idx: number) {
+  itemRefs.value[idx] = el
+}
+
 watch(
   () => ui.menuOpen,
   (open) => {
-    if (open) activeIndex.value = 0
+    if (open) {
+      activeIndex.value = 0
+      nextTick(() => {
+        const first = itemRefs.value[0]
+        first?.focus?.()
+      })
+    }
   },
 )
 
@@ -54,9 +67,11 @@ function onKey(e: KeyboardEvent) {
   if (e.key === 'ArrowDown') {
     e.preventDefault()
     activeIndex.value = (activeIndex.value + 1) % items.value.length
+    itemRefs.value[activeIndex.value]?.focus?.()
   } else if (e.key === 'ArrowUp') {
     e.preventDefault()
     activeIndex.value = (activeIndex.value - 1 + items.value.length) % items.value.length
+    itemRefs.value[activeIndex.value]?.focus?.()
   } else if (e.key === 'Enter' || e.key === 'Escape') {
     e.preventDefault()
     const it = items.value[activeIndex.value]
@@ -75,11 +90,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
   <div v-if="ui.menuOpen" class="absolute inset-0 z-20">
     <div class="absolute inset-0 bg-black/50" @click="ui.closeMenu()" />
     <div class="absolute bottom-10 left-2 right-2 bg-white text-black rounded shadow">
-      <ul>
+      <ul ref="listRef">
         <li
           v-for="(it, idx) in items"
           :key="it.key"
-          class="px-3 py-2 border-b last:border-b-0"
+          :ref="(el) => setItemRef(el as HTMLLIElement | null, idx)"
+          tabindex="0"
+          class="px-3 py-2 border-b last:border-b-0 outline-none"
           :class="idx === activeIndex ? 'underline underline-offset-4 decoration-2' : ''"
           @click="onPick(it.key)"
         >
