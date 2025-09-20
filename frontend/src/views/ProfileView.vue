@@ -144,12 +144,44 @@ function onKey(e: KeyboardEvent) {
   if (focus.value === 5) return void handleType({ v: confirmPassword })
 }
 
+const avatarList = ref<string[]>([])
+const avatarIndex = ref<number>(-1)
+
+async function loadAvatarList() {
+  try {
+    const res = await fetch('/avatars/manifest.json', { cache: 'no-cache' })
+    if (!res.ok) throw new Error('manifest not found')
+    const list = (await res.json()) as string[]
+    avatarList.value = Array.isArray(list) ? list : []
+    // Set initial index based on current avatarImage
+    if (avatarImage.value && avatarList.value.length) {
+      avatarIndex.value = avatarList.value.indexOf(avatarImage.value)
+    } else {
+      avatarIndex.value = 0
+      avatarImage.value = avatarList.value[0] || null
+    }
+  } catch (e) {
+    avatarList.value = []
+    avatarIndex.value = -1
+  }
+}
+
+function changeAvatar(dir: number) {
+  if (!avatarList.value.length) return
+  let idx = avatarIndex.value
+  idx = (idx + dir + avatarList.value.length) % avatarList.value.length
+  avatarIndex.value = idx
+  avatarImage.value = avatarList.value[idx]
+  setMessage(t('profile.msg.saved'))
+}
+
 onMounted(() => {
   window.addEventListener('keydown', onKey)
   nextTick(() => {
     focusDom()
     scrollToFocus()
   })
+  loadAvatarList()
 })
 onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 // 隨機挑選頭像：從 /avatars/manifest.json 讀取檔名清單（前端 public 目錄）
@@ -171,49 +203,59 @@ async function randomizeAvatar() {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-b from-sky-500 via-emerald-400 to-lime-400 text-black"
+    class="h-full flex flex-col bg-gradient-to-br from-pink-200 via-yellow-100 to-blue-200 text-black"
   >
-    <div class="flex-1 content-scroll p-2 text-sm space-y-2">
+    <div class="flex-1 content-scroll p-3 text-xs space-y-3">
       <!-- Avatar + Username -->
-      <div class="bg-white/70 rounded p-2">
-        <div class="grid grid-cols-[auto,1fr,auto,auto] items-center gap-2">
-          <div class="w-10 h-10 aspect-square shrink-0">
-            <img
-              v-if="avatarImage"
-              :src="`/avatars/${avatarImage}`"
-              alt="avatar"
-              class="w-full h-full rounded-full object-cover"
-            />
-            <div
-              v-else
-              class="w-full h-full rounded-full flex items-center justify-center text-white font-bold"
-              :style="{ backgroundColor: avatarColor }"
+      <div class="bg-white/70 rounded p-3">
+        <div class="grid grid-cols-[auto,auto,1fr,auto] items-center gap-2">
+          <div class="flex items-center justify-center">
+            <button
+              class="px-1 py-1 rounded-l text-black focus:ring-1"
+              :disabled="!avatarList.length"
+              @click="changeAvatar(-1)"
+              aria-label="Previous avatar"
             >
-              {{ avatarInitials }}
+              <
+            </button>
+            <div class="w-10 h-10 aspect-square shrink-0 mx-1">
+              <img
+                v-if="avatarImage"
+                :src="`/avatars/${avatarImage}`"
+                alt="avatar"
+                class="w-full h-full rounded-full object-cover"
+              />
+              <div
+                v-else
+                class="w-full h-full rounded-full flex items-center justify-center text-white font-bold"
+                :style="{ backgroundColor: avatarColor }"
+              >
+                {{ avatarInitials }}
+              </div>
             </div>
+            <button
+              class="px-1 py-1 rounded-l text-black focus:ring-1"
+              :disabled="!avatarList.length"
+              @click="changeAvatar(1)"
+              aria-label="Next avatar"
+            >
+             >
+            </button>
           </div>
           <div class="min-w-0">
-            <div class="text-[11px] opacity-70 mb-0.5">{{ t('profile.username') }}</div>
+            <div class="text-[12px] font-bold opacity-60 mb-1.5">{{ t('profile.username') }}</div>
             <div
               ref="usernameRef"
               tabindex="-1"
-              class="rounded bg-white px-2 py-1 min-h-[28px] overflow-hidden text-ellipsis whitespace-nowrap focus:outline-none"
+              class="rounded bg-white border px-2 py-1 min-h-[28px] overflow-hidden text-ellipsis whitespace-nowrap focus:outline-none"
               :class="focus === 0 ? 'ring-2 ring-black/50' : ''"
             >
               {{ username || t('profile.usernameHint') }}
             </div>
           </div>
           <button
-            ref="randomRef"
-            class="px-3 py-1 rounded bg-white/70 text-black border border-black/20 focus:outline-none"
-            :class="focus === 1 ? 'ring-2 ring-black/30' : ''"
-            @click="randomizeAvatar"
-          >
-            Random
-          </button>
-          <button
             ref="saveUserRef"
-            class="px-3 py-1 rounded bg-emerald-400 text-black border border-black/20 shrink-0 focus:outline-none"
+            class="px-3 py-1 rounded bg-[#8E8E8E] text-white border border-black/20 shrink-0"
             :class="focus === 2 ? 'ring-2 ring-black' : ''"
             @click="saveUsername"
           >
@@ -223,45 +265,45 @@ async function randomizeAvatar() {
       </div>
 
       <!-- Change password -->
-      <div class="bg-white/70 rounded p-2 space-y-2">
-        <div class="text-[11px] opacity-70">{{ t('profile.changePassword') }}</div>
+      <div class="bg-white/70 rounded p-3 space-y-2">
+        <div class="grid grid-cols-[auto,auto,1fr,auto] items-center gap-2">
+        <div class="text-[12px] font-bold opacity-60">{{ t('profile.changePassword') }}</div>
         <div class="grid grid-cols-1 gap-1">
-          <div
+          <input
             ref="oldRef"
-            tabindex="-1"
-            class="rounded bg-white px-2 py-1 focus:outline-none"
+            type="password"
+            v-model="oldPassword"
+            :placeholder="t('profile.old')"
+            class="rounded bg-white px-2 py-1 border focus:outline-none"
             :class="focus === 3 ? 'ring-2 ring-black/50' : ''"
-          >
-            {{ t('profile.old') }}: {{ oldPassword.replace(/./g, '•') }}
-          </div>
-          <div
+          />
+          <input
             ref="newRef"
-            tabindex="-1"
-            class="rounded bg-white px-2 py-1 focus:outline-none"
+            type="password"
+            v-model="newPassword"
+            :placeholder="t('profile.new')"
+            class="rounded bg-white px-2 py-1 border focus:outline-none"
             :class="focus === 4 ? 'ring-2 ring-black/50' : ''"
-          >
-            {{ t('profile.new') }}: {{ newPassword.replace(/./g, '•') }}
-          </div>
-          <div
+          />
+          <input
             ref="confirmRef"
-            tabindex="-1"
-            class="rounded bg-white px-2 py-1 focus:outline-none"
+            type="password"
+            v-model="confirmPassword"
+            :placeholder="t('profile.confirm')"
+            class="rounded bg-white px-2 py-1 border focus:outline-none"
             :class="focus === 5 ? 'ring-2 ring-black/50' : ''"
-          >
-            {{ t('profile.confirm') }}: {{ confirmPassword.replace(/./g, '•') }}
-          </div>
+          />
         </div>
-        <div class="flex justify-end">
-          <button
+        <button
             ref="savePwdRef"
-            class="px-2 py-1 rounded bg-amber-300 text-black border border-black/20 focus:outline-none"
+            class="px-3 py-1 rounded bg-[#8E8E8E] text-white border border-black/20 shrink-0"
             :class="focus === 6 ? 'ring-2 ring-black' : ''"
             @click="savePassword"
           >
             {{ t('profile.update') }}
-          </button>
-        </div>
+        </button>
       </div>
+    </div>
 
       <div v-if="msg" class="text-center text-xs bg-black/70 text-white rounded p-1">{{ msg }}</div>
     </div>

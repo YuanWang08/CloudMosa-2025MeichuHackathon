@@ -288,19 +288,19 @@ async function onMenuAction({ type }: { type: string }) {
     <div class="phone-viewport bg-white relative flex flex-col">
       <header
         v-if="!isAuthPage && !route.path.startsWith('/channel/')"
-        class="shrink-0 p-2 text-center text-xs text-neutral-100 bg-neutral-800 border-b"
+        class="shrink-0 p-2 text-center text-base text-neutral-100 bg-neutral-700 border-b"
       >
         <template v-if="route.path.startsWith('/settings/language')">
-          <div class="font-semibold">{{ t('headers.language') }}</div>
+          <div class="text-base font-semibold">{{ t('headers.language') }}</div>
         </template>
         <template v-else-if="route.path.startsWith('/settings/sms')">
-          <div class="font-semibold">{{ t('headers.sms') }}</div>
+          <div class="text-base font-semibold">{{ t('headers.sms') }}</div>
         </template>
         <template v-else-if="route.path.startsWith('/settings/profile')">
-          <div class="font-semibold">{{ t('headers.profile') }}</div>
+          <div class="text-base font-semibold">{{ t('headers.profile') }}</div>
         </template>
         <template v-else-if="route.path.startsWith('/settings')">
-          <div class="font-semibold">{{ t('headers.settings') }}</div>
+          <div class="text-base font-semibold">{{ t('headers.settings') }}</div>
         </template>
         <template v-else>
           <nav class="flex items-center justify-center gap-6 truncate">
