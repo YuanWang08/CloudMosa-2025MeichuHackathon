@@ -445,7 +445,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-t from-indigo-500 via-teal-400 to-emerald-400 text-white"
+    class="h-full flex flex-col bg-gradient-to-br from-pink-200 via-orange-200 to-yellow-200 text-white"
   >
     <!-- Local channel header (replaces global Broadcast/Message) -->
     <div class="p-2 text-xs opacity-90 flex items-center gap-2">
@@ -587,12 +587,12 @@ onBeforeUnmount(() => {
                 >
                   <div
                     v-if="!isLoadingTts && playProgress > 0 && playProgress <= 1"
-                    class="h-full rounded-full bg-gradient-to-r from-emerald-300 via-cyan-300 to-blue-300 transition-[width] duration-150 ease-linear shadow-[0_0_8px_rgba(255,255,255,0.35)]"
+                    class="h-full rounded-full bg-gradient-to-br from-emerald-300 via-cyan-300 to-blue-300 transition-[width] duration-150 ease-linear shadow-[0_0_8px_rgba(255,255,255,0.35)]"
                     :style="{ width: (playProgress * 100).toFixed(2) + '%' }"
                   ></div>
                   <div
                     v-else
-                    class="h-full animate-progressIndeterminate bg-gradient-to-r from-white/30 via-white/70 to-white/30"
+                    class="h-full animate-progressIndeterminate bg-gradient-to-br from-white/30 via-white/70 to-white/30"
                     style="width: 35%"
                   ></div>
                 </div>

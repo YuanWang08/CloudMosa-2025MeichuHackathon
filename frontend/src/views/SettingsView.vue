@@ -131,7 +131,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-tr from-pink-200 via-orange-100 to-yellow-200 text-black"
+    class="h-full flex flex-col bg-gradient-to-br from-pink-200 via-orange-100 to-yellow-200 text-black"
   >
     <div class="flex-1 content-scroll p-2 text-sm">
       <ul class="space-y-2">

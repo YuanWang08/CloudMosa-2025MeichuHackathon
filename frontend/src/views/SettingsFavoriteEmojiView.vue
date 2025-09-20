@@ -103,17 +103,16 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-bl from-orange-200 via-rose-200 to-white-200 text-black"
+    class="h-full flex flex-col bg-gradient-to-br from-orange-200 via-rose-200 to-white-200 text-black"
   >
-    <div class="flex-1 content-scroll p-2 text-sm">
-      <div class="text-xs opacity-80 mb-1">Select your 6 favorite emojis</div>
+    <div class="mt-2 flex-1 content-scroll p-2 text-sm">
       <div class="grid grid-cols-3 gap-2">
         <button
           v-for="(e, idx) in slots"
           :key="idx"
           :ref="(el) => onItemRef(el, idx)"
-          class="relative rounded px-3 py-3 text-2xl bg-white/80 flex items-center justify-center"
-          :class="active === idx ? 'ring-2 ring-black' : ''"
+          class="relative rounded px-3 py-3 text-2xl flex items-center justify-center"
+          :class="active === idx ? 'ring-2 ring-black bg-black/20' : 'bg-white/80'"
           @click="openPicker(idx)"
           @focus="active = idx"
         >
@@ -127,7 +126,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
       <div class="mt-3">
         <button
           :ref="(el) => onItemRef(el, 6)"
-          class="w-full rounded py-2 text-sm"
+          class="w-full rounded mt-1 py-2 text-sm"
           :class="active === 6 ? 'bg-black/20' : 'bg-white/80'"
           @click="saveAll"
           @focus="active = 6"

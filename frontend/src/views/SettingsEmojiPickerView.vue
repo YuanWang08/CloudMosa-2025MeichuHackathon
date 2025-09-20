@@ -174,7 +174,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-b from-rose-500 via-orange-400 to-yellow-300 text-black"
+    class="h-full flex flex-col bg-gradient-to-br from-rose-500 via-orange-400 to-yellow-300 text-black"
   >
     <div class="flex-1 content-scroll p-2 text-sm">
       <div v-if="loading">Loading…</div>

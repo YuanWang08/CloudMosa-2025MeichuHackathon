@@ -38,8 +38,8 @@
     "sms": "SMS",
     "profile": "個人資料",
     "settings": "設定",
-    "broadcast": "廣播",
-    "message": "訊息"
+    "broadcast": "廣播 📢",
+    "message": "訊息 💬"
   },
   "settings": {
     "language": "語言",

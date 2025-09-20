@@ -221,7 +221,7 @@ async function randomizeAvatar() {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-tr from-pink-200 via-yellow-100 to-blue-100 text-black"
+    class="h-full flex flex-col bg-gradient-to-br from-pink-200 via-yellow-100 to-blue-100 text-black"
   >
     <div class="flex-1 content-scroll p-3 text-xs space-y-3">
       <!-- Avatar + Username -->
@@ -263,7 +263,6 @@ async function randomizeAvatar() {
               ref="usernameRef"
               tabindex="-1"
               class="rounded bg-white border px-2 py-1 min-h-[28px] overflow-hidden text-ellipsis whitespace-nowrap focus:outline-none"
-
               :class="focus === 0 ? 'ring-2 ring-black/50' : ''"
             >
               {{ username || t('profile.usernameHint') }}

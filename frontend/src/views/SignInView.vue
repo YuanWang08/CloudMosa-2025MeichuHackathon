@@ -82,37 +82,37 @@ async function onSubmit() {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-b from-indigo-600 via-pink-500 to-orange-400 text-white"
+    class="h-full flex flex-col bg-gradient-to-t from-yellow-200 via-green-100 to-blue-100 text-white"
   >
-    <div class="flex-1 p-3 flex flex-col gap-2">
-      <label class="text-xs">{{ t('auth.username') }}</label>
+    <div class="flex-1 p-4 flex flex-col gap-1">
+      <label class="text-sm text-black/60 font-semibold">{{ t('auth.username') }}</label>
       <input
         ref="userRef"
         v-model="username"
-        class="rounded px-2 py-1 text-black text-sm"
+        class="rounded bg-/70 px-2 py-1 text-black text-xs border border-black/20"
         :placeholder="t('auth.usernamePlaceholder')"
       />
-      <label class="text-xs">{{ t('auth.password') }}</label>
+      <label class="text-sm text-black/60 font-semibold">{{ t('auth.password') }}</label>
       <input
         ref="passRef"
         v-model="password"
         type="password"
-        class="rounded px-2 py-1 text-black text-sm"
+        class="rounded bg-/70 px-2 py-1 text-black text-xs border border-black/20"
         :placeholder="t('auth.passwordPlaceholder')"
       />
-      <p v-if="err" class="text-xs text-yellow-200">{{ err }}</p>
+      <p v-if="err" class="text-xs text-rose-400">{{ err }}</p>
       <button
         ref="signinRef"
         :disabled="loading"
         @click="onSubmit"
-        class="mt-2 bg-emerald-400 hover:bg-emerald-500 active:bg-emerald-600 text-black rounded py-1 text-sm"
+        class="mt-5 bg-[#0066CC]/80 focus:bg-[#0066CC]/90 text-white rounded py-1 text-sm"
       >
         {{ loading ? t('common.loading') : t('auth.signIn') }}
       </button>
       <button
         ref="signupRef"
         @click="router.push('/signup')"
-        class="bg-white/20 hover:bg-white/30 rounded py-1 text-sm"
+        class="mt-1 bg-white/60 focus:bg-black/10 rounded py-1 text-[#0066CC]/60 focus: text-[#0066CC]/80 text-sm"
       >
         {{ t('auth.toSignUp') }}
       </button>
