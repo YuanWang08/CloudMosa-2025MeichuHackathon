@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-b from-rose-400 via-purple-400 to-indigo-400 text-white"
+    class="h-full flex flex-col bg-gradient-to-b from-rose-400 via-pink-400 to-white-400 text-white"
   >
     <div class="flex-1 p-2 overflow-auto text-sm">
       <ul class="space-y-2">

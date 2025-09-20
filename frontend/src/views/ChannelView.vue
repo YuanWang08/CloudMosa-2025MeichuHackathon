@@ -432,7 +432,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-b from-indigo-500 via-teal-400 to-emerald-400 text-white"
+    class="h-full flex flex-col bg-gradient-to-t from-indigo-500 via-teal-400 to-emerald-400 text-white"
   >
     <!-- Local channel header (replaces global Broadcast/Message) -->
     <div class="p-2 text-xs opacity-90 flex items-center gap-2">

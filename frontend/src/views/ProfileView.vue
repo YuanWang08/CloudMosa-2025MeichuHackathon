@@ -23,15 +23,16 @@ const confirmPassword = ref('')
 // 0=username, 1=randomAvatar, 2=saveUsername, 3=oldPwd, 4=newPwd, 5=confirmPwd, 6=savePassword
 const focus = ref(0)
 const msg = ref<string>('')
+const avatarRef = ref<HTMLDivElement | null>(null)
 const usernameRef = ref<HTMLDivElement | null>(null)
-const randomRef = ref<HTMLButtonElement | null>(null)
-const oldRef = ref<HTMLDivElement | null>(null)
-const newRef = ref<HTMLDivElement | null>(null)
-const confirmRef = ref<HTMLDivElement | null>(null)
 const saveUserRef = ref<HTMLButtonElement | null>(null)
+const oldRef = ref<HTMLInputElement | null>(null)
+const newRef = ref<HTMLInputElement | null>(null)
+const confirmRef = ref<HTMLInputElement | null>(null)
 const savePwdRef = ref<HTMLButtonElement | null>(null)
+
 // 用於自動捲動/聚焦的元素陣列（順序需對應焦點索引）
-const focusEls = [usernameRef, randomRef, saveUserRef, oldRef, newRef, confirmRef, savePwdRef]
+const focusEls = [avatarRef, usernameRef, saveUserRef, oldRef, newRef, confirmRef, savePwdRef]
 
 function scrollToFocus() {
   const el = focusEls[focus.value]?.value
@@ -100,37 +101,50 @@ async function savePassword() {
   setMessage(t('profile.msg.passwordUpdated'))
 }
 
+
 function onKey(e: KeyboardEvent) {
   if (ui.confirmOpen || ui.menuOpen) return
-  // 上下移動焦點
+
+  // 上下移動
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
     e.preventDefault()
     const dir = e.key === 'ArrowDown' ? 1 : -1
-    focus.value = Math.max(0, Math.min(6, focus.value + dir))
+    focus.value = Math.max(0, Math.min(focusEls.length - 1, focus.value + dir))
     nextTick(() => {
       focusDom()
       scrollToFocus()
     })
     return
   }
-  // Enter 觸發儲存或切換
+
+  // avatar 區塊 → 左右切換
+  if (focus.value === 0) {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      changeAvatar(-1)
+      return
+    }
+    if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      changeAvatar(1)
+      return
+    }
+  }
+
+  // Enter 操作
   if (e.key === 'Enter') {
     e.preventDefault()
-    if (focus.value === 1) return void randomizeAvatar()
     if (focus.value === 2) return void saveUsername()
     if (focus.value === 6) return void savePassword()
-    return
   }
-  // 文字/數字輸入
+
+  // 輸入處理
   const handleType = (s: { v: typeof username | typeof oldPassword }) => {
-    // 僅允許英數底線，且長度上限 16
-    // Backspace
     if (e.key === 'Backspace') {
       e.preventDefault()
       s.v.value = s.v.value.slice(0, -1)
       return true
     }
-    // 字元
     if (/^[A-Za-z0-9_]$/.test(e.key)) {
       e.preventDefault()
       if (s.v.value.length < 16) s.v.value += e.key
@@ -138,7 +152,8 @@ function onKey(e: KeyboardEvent) {
     }
     return false
   }
-  if (focus.value === 0) return void handleType({ v: username })
+
+  if (focus.value === 1) return void handleType({ v: username })
   if (focus.value === 3) return void handleType({ v: oldPassword })
   if (focus.value === 4) return void handleType({ v: newPassword })
   if (focus.value === 5) return void handleType({ v: confirmPassword })
@@ -203,44 +218,42 @@ async function randomizeAvatar() {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-br from-pink-200 via-yellow-100 to-blue-200 text-black"
+    class="h-full flex flex-col bg-gradient-to-tr from-pink-200 via-yellow-100 to-blue-100 text-black"
   >
     <div class="flex-1 content-scroll p-3 text-xs space-y-3">
       <!-- Avatar + Username -->
       <div class="bg-white/70 rounded p-3">
         <div class="grid grid-cols-[auto,auto,1fr,auto] items-center gap-2">
           <div class="flex items-center justify-center">
-            <button
-              class="px-1 py-1 rounded-l text-black focus:ring-1"
-              :disabled="!avatarList.length"
-              @click="changeAvatar(-1)"
-              aria-label="Previous avatar"
-            >
-              <
-            </button>
-            <div class="w-10 h-10 aspect-square shrink-0 mx-1">
-              <img
-                v-if="avatarImage"
-                :src="`/avatars/${avatarImage}`"
-                alt="avatar"
-                class="w-full h-full rounded-full object-cover"
-              />
-              <div
-                v-else
-                class="w-full h-full rounded-full flex items-center justify-center text-white font-bold"
-                :style="{ backgroundColor: avatarColor }"
-              >
-                {{ avatarInitials }}
-              </div>
-            </div>
-            <button
-              class="px-1 py-1 rounded-l text-black focus:ring-1"
-              :disabled="!avatarList.length"
-              @click="changeAvatar(1)"
-              aria-label="Next avatar"
-            >
-             >
-            </button>
+            <div
+  ref="avatarRef"
+  tabindex="-1"
+  class="flex items-center justify-center"
+  :class="focus === 0 ? 'ring-2 ring-black/50' : ''"
+>
+  <button class="px-1 py-1 text-black focus:font-bold" :disabled="!avatarList.length">
+    <
+  </button>
+  <div class="w-10 h-10 aspect-square shrink-0 mx-1">
+    <img
+      v-if="avatarImage"
+      :src="`/avatars/${avatarImage}`"
+      alt="avatar"
+      class="w-full h-full rounded-full object-cover"
+    />
+    <div
+      v-else
+      class="w-full h-full rounded-full flex items-center justify-center text-white font-bold"
+      :style="{ backgroundColor: avatarColor }"
+    >
+      {{ avatarInitials }}
+    </div>
+  </div>
+  <button class="px-1 py-1 text-black font-bold" :disabled="!avatarList.length">
+    >
+  </button>
+</div>
+
           </div>
           <div class="min-w-0">
             <div class="text-[12px] font-bold opacity-60 mb-1.5">{{ t('profile.username') }}</div>
@@ -248,7 +261,7 @@ async function randomizeAvatar() {
               ref="usernameRef"
               tabindex="-1"
               class="rounded bg-white border px-2 py-1 min-h-[28px] overflow-hidden text-ellipsis whitespace-nowrap focus:outline-none"
-              :class="focus === 0 ? 'ring-2 ring-black/50' : ''"
+              :class="focus === 1 ? 'ring-2 ring-black/50' : ''"
             >
               {{ username || t('profile.usernameHint') }}
             </div>

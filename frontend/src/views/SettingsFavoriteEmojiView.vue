@@ -100,7 +100,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-b from-teal-500 via-cyan-400 to-sky-400 text-black"
+    class="h-full flex flex-col bg-gradient-to-bl from-orange-200 via-rose-200 to-white-200 text-black"
   >
     <div class="flex-1 content-scroll p-2 text-sm">
       <div class="text-xs opacity-80 mb-1">Select your 6 favorite emojis</div>

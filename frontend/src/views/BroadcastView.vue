@@ -69,7 +69,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-b from-indigo-600 via-purple-500 to-pink-500 text-white"
+    class="h-full flex flex-col bg-gradient-to-br from-red-200 via-orange-200 to-yellow-200 text-white"
   >
     <!-- Header removed for background color distinction -->
     <div class="flex-1 p-2 overflow-auto text-sm">
