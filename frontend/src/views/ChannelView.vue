@@ -264,11 +264,14 @@ function updateSoftkeys() {
   }
   // 擁有者：RSK 一律為 Back；若有輸入內容則詢問捨棄
   ui.setSoftkeys({
-    leftLabel: isEditing.value ? 'Done' : 'Edit',
+    leftLabel: isEditing.value ? 'Done' : 'Menu',
     showLeft: true,
     onLeft: () => {
-      if (isEditing.value) stopEditing()
-      else startEditing()
+      if (isEditing.value) {
+        stopEditing()
+      } else {
+        ui.openMenu()
+      }
     },
     rightLabel: 'Back',
     showRight: true,

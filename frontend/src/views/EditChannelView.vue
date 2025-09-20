@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { channelsApi } from '@/lib/api'
 import type { ChannelWithQuickReplies } from '@/types/api'
 import { useUiStore } from '@/stores/ui'
+import { useDisableMenu } from '@/composables/useDisableMenu'
 
 const route = useRoute()
 const router = useRouter()
@@ -24,6 +25,8 @@ const qr2Ref = ref<HTMLInputElement | null>(null)
 const qr3Ref = ref<HTMLInputElement | null>(null)
 const saveRef = ref<HTMLButtonElement | null>(null)
 const fields = [titleRef, allowRef, qr1Ref, qr2Ref, qr3Ref, saveRef]
+
+useDisableMenu()
 
 async function load() {
   loading.value = true
