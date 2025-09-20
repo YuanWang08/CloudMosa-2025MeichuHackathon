@@ -89,7 +89,7 @@ async function createChannel() {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-b from-emerald-400 via-sky-400 to-indigo-400 text-white"
+    class="h-full flex flex-col bg-gradient-to-tr from-yellow-200 via-orange-200 to-blue-200 text-white"
   >
     <div class="flex-1 content-scroll p-2 text-sm space-y-2">
       <label class="text-xs">Title</label>

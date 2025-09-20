@@ -64,7 +64,7 @@ async function join() {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-b from-lime-400 via-amber-400 to-rose-400 text-black"
+    class="h-full flex flex-col bg-gradient-to-tr from-lime-200 via-amber-100 to-rose-200 text-black"
   >
     <div class="flex-1 content-scroll p-2 text-sm">
       <label class="text-xs">Channel ID</label>

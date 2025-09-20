@@ -80,7 +80,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-b from-rose-400 via-purple-400 to-indigo-400 text-white"
+    class="h-full flex flex-col bg-gradient-to-br from-pink-200 via-orange-200 to-yellow-200 text-white"
   >
     <div class="flex-1 p-2 overflow-auto text-sm">
       <div v-if="loading" class="opacity-80">Loading…</div>

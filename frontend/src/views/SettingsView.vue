@@ -37,7 +37,7 @@ watch(defaultPage, (v) => localStorage.setItem('defaultPage', v))
 
 const items = ref<Item[]>([
   { type: 'link', label: t('settings.language'), to: '/settings/language' },
-  { type: 'toggle', label: t('settings.appearance'), key: 'theme', value: theme.value },
+  // { type: 'toggle', label: t('settings.appearance'), key: 'theme', value: theme.value },
   {
     type: 'select',
     label: t('settings.defaultPage'),
