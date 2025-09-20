@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useUiStore } from '@/stores/ui'
 import { useAuthStore } from '@/stores/auth'
+import { useDisableMenu } from '@/composables/useDisableMenu'
 
 type Item =
   | { type: 'link'; label: string; to: string }
@@ -115,19 +116,16 @@ function activate(idx: number) {
   }
 }
 
+useDisableMenu()
+
 onMounted(() => {
   window.addEventListener('keydown', onKey)
   nextTick(focusActive)
   // 初始套用主題
   document.documentElement.classList.toggle('dark', theme.value === 'dark')
-  ui.setSoftkeys({
-    showLeft: false,
-    onLeft: () => {},
-  })
 })
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKey)
-  ui.setSoftkeys(null)
 })
 </script>
 

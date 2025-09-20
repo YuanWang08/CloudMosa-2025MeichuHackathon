@@ -4,10 +4,13 @@ import { useRouter } from 'vue-router'
 import { useUiStore } from '@/stores/ui'
 import { useAuthStore } from '@/stores/auth'
 import { emojiApi } from '@/lib/api'
+import { useDisableMenu } from '@/composables/useDisableMenu'
 
 const router = useRouter()
 const ui = useUiStore()
 const auth = useAuthStore()
+
+useDisableMenu()
 
 const defaults = ['✅', '❌', '⏰', '📢', '👍', '😢']
 const slots = ref<string[]>(

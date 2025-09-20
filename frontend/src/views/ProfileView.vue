@@ -3,10 +3,13 @@ import { ref, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useUiStore } from '@/stores/ui'
 import { useI18n } from 'vue-i18n'
+import { useDisableMenu } from '@/composables/useDisableMenu'
 
 const auth = useAuthStore()
 const ui = useUiStore()
 const { t } = useI18n()
+
+useDisableMenu()
 
 // 顯示資料
 const username = ref(auth.user?.username || '')
