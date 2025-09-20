@@ -36,6 +36,15 @@ const quickEmojis = computed(() => {
 })
 const customQuick = computed(() => ch.value?.ChannelQuickReplies ?? [])
 
+// Owner info for header
+const owner = computed(() => ch.value?.owner)
+const ownerAvatarUrl = computed(() =>
+  owner.value?.avatarImage ? `/avatars/${owner.value.avatarImage}` : null,
+)
+const ownerInitials = computed(() => owner.value?.avatarInitials ?? 'U')
+const ownerColor = computed(() => owner.value?.avatarColor ?? '#4f46e5')
+const ownerUsername = computed(() => (owner.value?.username ? `@${owner.value.username}` : ''))
+
 // Joiner read-only selection + TTS state
 const selectedIdx = ref(0)
 const playingIdx = ref<number | null>(null)
@@ -320,7 +329,31 @@ onBeforeUnmount(() => {
   <div
     class="h-full flex flex-col bg-gradient-to-b from-indigo-500 via-teal-400 to-emerald-400 text-white"
   >
-    <div class="flex-1 p-2 text-sm flex flex-col gap-2 overflow-hidden">
+    <!-- Local channel header (replaces global Broadcast/Message) -->
+    <div class="p-2 text-xs opacity-90 flex items-center gap-2">
+      <div
+        class="shrink-0 w-7 h-7 rounded-full overflow-hidden bg-white/20 grid place-items-center"
+      >
+        <img
+          v-if="ownerAvatarUrl"
+          :src="ownerAvatarUrl"
+          alt="avatar"
+          class="w-full h-full object-cover"
+          referrerpolicy="no-referrer"
+        />
+        <span
+          v-else
+          class="text-[10px] font-semibold px-1 rounded"
+          :style="{ backgroundColor: ownerColor }"
+          >{{ ownerInitials }}</span
+        >
+      </div>
+      <div class="min-w-0">
+        <div class="font-semibold truncate">{{ ch?.title || 'Channel' }}</div>
+        <div class="opacity-90 text-[11px] truncate">{{ ownerUsername }}</div>
+      </div>
+    </div>
+    <div class="flex-1 p-2 pt-0 text-sm flex flex-col gap-2 overflow-hidden">
       <div v-if="loading" class="opacity-80">Loading…</div>
       <div v-else-if="error" class="text-red-200">{{ error }}</div>
       <template v-else>

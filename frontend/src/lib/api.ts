@@ -102,3 +102,20 @@ export const ttsApi = {
       body: JSON.stringify({ text, voice, messageId }),
     }),
 }
+
+// SMS API
+export interface SmsSchedule {
+  hour: number // 0..23
+  minute: number // 0..59
+}
+export interface SmsSettings {
+  enabled: boolean
+  phone: string | null
+  schedules: SmsSchedule[]
+  timezone?: string
+}
+export const smsApi = {
+  getSettings: () => apiFetch<SmsSettings>(`/api/sms/settings`),
+  updateSettings: (s: SmsSettings) =>
+    apiFetch<SmsSettings>(`/api/sms/settings`, { method: 'PUT', body: JSON.stringify(s) }),
+}

@@ -287,7 +287,7 @@ async function onMenuAction({ type }: { type: string }) {
   >
     <div class="phone-viewport bg-white relative flex flex-col">
       <header
-        v-if="!isAuthPage"
+        v-if="!isAuthPage && !route.path.startsWith('/channel/')"
         class="shrink-0 p-2 text-center text-xs text-neutral-100 bg-neutral-800 border-b"
       >
         <template v-if="route.path.startsWith('/settings/language')">

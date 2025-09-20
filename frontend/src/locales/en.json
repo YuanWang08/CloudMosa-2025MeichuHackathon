@@ -75,7 +75,11 @@
     "enable": "Enable SMS",
     "phoneNumber": "Phone number",
     "typeToFilter": "Type to filter",
-    "enterNumbers": "Enter numbers…"
+    "enterNumbers": "Enter numbers…",
+    "schedules": "Schedules",
+    "editTime": "Edit time",
+    "timezone": "Timezone",
+    "change": "Change"
   },
   "languages": {
     "en": "English",
