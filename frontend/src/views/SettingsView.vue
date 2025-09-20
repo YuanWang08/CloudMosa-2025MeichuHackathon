@@ -120,8 +120,15 @@ onMounted(() => {
   nextTick(focusActive)
   // 初始套用主題
   document.documentElement.classList.toggle('dark', theme.value === 'dark')
+  ui.setSoftkeys({
+    showLeft: false,
+    onLeft: () => {},
+  })
 })
-onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onKey)
+  ui.setSoftkeys(null)
+})
 </script>
 
 <template>
