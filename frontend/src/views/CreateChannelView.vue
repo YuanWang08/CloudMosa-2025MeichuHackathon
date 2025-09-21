@@ -200,26 +200,26 @@ async function createChannel() {
         <input
           ref="qr1Ref"
           v-model="qr1"
-          class="w-full rounded px-2 py-1 text-sm text-black mt-1"
+          class="w-full border rounded px-2 py-1 text-sm text-black mt-1"
           :placeholder="$t('create.quickPlaceholder', { index: 1 })"
         />
         <input
           ref="qr2Ref"
           v-model="qr2"
-          class="w-full rounded px-2 py-1 text-sm text-black mt-1"
+          class="w-full border rounded px-2 py-1 text-sm text-black mt-1"
           :placeholder="$t('create.quickPlaceholder', { index: 2 })"
         />
         <input
           ref="qr3Ref"
           v-model="qr3"
-          class="w-full rounded px-2 py-1 text-sm text-black mt-1"
+          class="w-full border rounded px-2 py-1 text-sm text-black mt-1"
           :placeholder="$t('create.quickPlaceholder', { index: 3 })"
         />
       </div>
       <button
         ref="submitRef"
         :disabled="loading"
-        class="w-full bg-[#8E8E8E] text-white rounded py-1 focus:opacity-60"
+        class="w-full bg-black/70 text-white rounded py-1 focus:opacity-60"
         @click="createChannel"
       >
         {{ $t('create.submit') }}

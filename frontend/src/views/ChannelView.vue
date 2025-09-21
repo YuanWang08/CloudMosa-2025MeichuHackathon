@@ -560,18 +560,17 @@ onBeforeUnmount(() => {
               <!-- 分隔線：未讀與已讀的邊界（清單為新到舊，未讀在前） -->
               <div
                 v-if="unreadCountRef > 0 && idx === unreadCountRef"
-                class="text-[10px] uppercase tracking-wide text-white/80 flex items-center gap-2"
+                class="text-[10px] uppercase tracking-wide text-black/80 flex items-center gap-2"
               >
-                <span class="flex-1 h-px bg-white/40" />
+                <span class="flex-1 h-px bg-black/40" />
                 <span>{{ t('channel.earlier') }}</span>
-                <span class="flex-1 h-px bg-white/40" />
+                <span class="flex-1 h-px bg-black/40" />
               </div>
-
               <div
-                class="rounded px-2 py-2 leading-[1.35] break-words text-white relative"
+                class="rounded px-2 py-2 leading-[1.35] break-words text-black/80 relative"
                 :class="[
-                  idx < unreadCountRef ? 'bg-amber-300/20 ring-1 ring-amber-300' : 'bg-white/15',
-                  selectedIdx === idx ? 'ring-2 ring-white/70' : '',
+                  idx < unreadCountRef ? 'bg-amber-300/20' : 'bg-white/30',
+                  selectedIdx === idx ? 'ring-1 ring-black/50' : '',
                 ]"
               >
                 <div class="opacity-75 text-[10px] mb-0.5">
