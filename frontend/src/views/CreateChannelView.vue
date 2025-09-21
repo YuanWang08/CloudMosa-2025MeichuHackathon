@@ -161,7 +161,7 @@ async function createChannel() {
   >
     <div class="flex-1 content-scroll p-2 text-sm space-y-2">
       <div>
-        <div class="text-xs opacity-80">Template</div>
+        <div class="text-sm opacity-80 mt-1">Template</div>
         <div class="flex gap-2 mt-1">
           <button
             v-for="(tpl, idx) in templateOptions"
@@ -170,51 +170,51 @@ async function createChannel() {
             class="px-2 py-1 rounded border text-xs"
             :class="
               selectedTemplate === tpl.key
-                ? 'bg-white text-black border-white shadow'
-                : 'bg-white/40 text-black/80 border-transparent'
+                ? 'bg-black/20 text-black shadow border-transparent'
+                : 'bg-white/60 text-black/80 border-transparent'
             "
             @click="applyTemplate(tpl.key)"
-            @focus="focusIndex = idx"
-          >
+            @focus="() => { focusIndex = idx; applyTemplate(tpl.key); }"
+              >
             {{ tpl.label }}
           </button>
         </div>
       </div>
-      <label class="text-xs">Title</label>
+      <label class="text-sm opacity-80">Title</label>
       <input
         ref="titleRef"
         v-model="title"
-        class="w-full rounded px-2 py-1 text-sm text-black"
+        class="w-full border rounded px-2 py-1 text-xs text-black"
         placeholder="Channel title"
       />
-      <label class="flex items-center gap-2 text-xs">
+      <label class="flex items-center gap-1 text-black/70 text-[10px]">
         <input ref="allowRef" type="checkbox" v-model="allowJoin" /> Allow others to join
       </label>
       <div>
-        <div class="text-xs opacity-90">Custom quick replies</div>
+        <div class="text-sm opacity-80 mt-2">Quick replies</div>
         <input
           ref="qr1Ref"
           v-model="qr1"
-          class="w-full rounded px-2 py-1 text-sm text-black mt-1"
+          class="w-full border rounded px-2 py-1 text-xs text-black mt-1"
           placeholder="Quick reply #1 (optional)"
         />
         <input
           ref="qr2Ref"
           v-model="qr2"
-          class="w-full rounded px-2 py-1 text-sm text-black mt-1"
+          class="w-full border rounded px-2 py-1 text-xs text-black mt-1"
           placeholder="Quick reply #2 (optional)"
         />
         <input
           ref="qr3Ref"
           v-model="qr3"
-          class="w-full rounded px-2 py-1 text-sm text-black mt-1"
+          class="w-full border rounded px-2 py-1 text-xs text-black mt-1"
           placeholder="Quick reply #3 (optional)"
         />
       </div>
       <button
         ref="submitRef"
         :disabled="loading"
-        class="w-full bg-white text-black rounded py-1 disabled:opacity-60"
+        class="w-full bg-[#8E8E8E] text-white rounded py-1 focus:opacity-60"
         @click="createChannel"
       >
         Create

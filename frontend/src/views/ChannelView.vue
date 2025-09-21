@@ -451,10 +451,10 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-br from-pink-200 via-orange-200 to-yellow-200 text-white"
+    class="h-full flex flex-col bg-gradient-to-br from-pink-200 via-orange-200 to-yellow-200 text-black/80"
   >
     <!-- Local channel header (replaces global Broadcast/Message) -->
-    <div class="p-2 text-xs opacity-90 flex items-center gap-2">
+    <div class="p-3 text-sm opacity-90 flex items-center gap-2">
       <div
         class="shrink-0 w-7 h-7 rounded-full overflow-hidden bg-white/20 grid place-items-center"
       >
@@ -492,7 +492,7 @@ onBeforeUnmount(() => {
           <textarea
             ref="textareaRef"
             v-model="input"
-            class="w-full rounded border-2 border-white/80 bg-white/95 p-2 text-sm text-black shadow-sm focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+            class="w-full rounded border-2 border-white/80 bg-white/95 p-2 text-sm text-black shadow-sm focus:ring-1"
             rows="3"
             placeholder="Type your message"
           />
@@ -541,7 +541,7 @@ onBeforeUnmount(() => {
               <div class="flex items-center gap-2">
                 <span
                   :class="
-                    quickInputEnabled ? 'bg-emerald-300 text-black' : 'bg-white/30 text-white'
+                    quickInputEnabled ? 'bg-green-400 text-black' : 'bg-red-400 text-white'
                   "
                   class="rounded px-2 py-0.5"
                   >{{ quickInputEnabled ? 'ON' : 'OFF' }}</span
