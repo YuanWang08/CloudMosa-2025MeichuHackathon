@@ -201,7 +201,7 @@ onBeforeUnmount(() => {
           :key="m.id"
           :ref="itemRefSetter(idx)"
           class="relative rounded px-2 py-2 leading-[1.35] break-words"
-          :class="['bg-black/15', selectedIdx === idx ? 'ring-2 ring-black/70' : 'ring-0']"
+          :class="['bg-white/15', selectedIdx === idx ? 'ring-2 ring-white/70' : 'ring-0']"
         >
           <div class="opacity-75 text-[10px] mb-0.5">
             {{ new Date(m.createdAt).toLocaleString() }}
