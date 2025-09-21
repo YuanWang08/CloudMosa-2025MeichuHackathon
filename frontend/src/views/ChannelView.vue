@@ -152,7 +152,12 @@ async function playSelectedJoiner() {
       if (!audio || !audio.duration || isNaN(audio.duration)) return
       playProgress.value = Math.min(1, Math.max(0, audio.currentTime / audio.duration))
     }
-    audio.onended = () => stopAudio()
+    audio.onended = () => {
+      if (audio) {
+        audio.onerror = null
+      }
+      stopAudio()
+    }
     audio.onerror = () => {
       errorMsg.value = 'TTS failed'
       stopAudio()
