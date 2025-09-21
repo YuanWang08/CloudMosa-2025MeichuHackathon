@@ -91,8 +91,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           :key="c.id"
           :ref="(el) => setItemRef(el as HTMLElement | null, idx)"
           class="rounded p-2 flex items-center justify-between gap-2"
-          :class="activeIndex === idx ? 'bg-white/25 ring-1 ring-white/50' : 'bg-white/15'"
-        >
+          :class="activeIndex === idx ? 'bg-white/50 ring-1 ring-white/50 font-semibold text-black/70' : 'bg-white/15 text-black/20'"
+          >
           <div class="flex items-center gap-2 min-w-0 flex-1">
             <div
               class="shrink-0 w-7 h-7 rounded-full overflow-hidden bg-white/20 grid place-items-center"
@@ -111,19 +111,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
                 >{{ c.owner?.avatarInitials || 'U' }}</span
               >
             </div>
-            <span class="truncate">{{ c.title }}</span>
+            <span class="truncate" @click="openChannel(c.id)">{{ c.title }}</span>
           </div>
-          <button
-            class="relative bg-amber-300 text-black rounded px-2 py-1 text-xs"
-            @click="openChannel(c.id)"
-          >
-            Open
             <span
               v-if="Number(c.unreadCount || 0) > 0"
               class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500"
               aria-label="unread"
             />
-          </button>
         </li>
         <li v-if="!hasAny" class="opacity-80">No joined channels yet. Join from Home.</li>
       </ul>

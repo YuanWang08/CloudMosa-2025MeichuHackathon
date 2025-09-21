@@ -66,18 +66,18 @@ async function join() {
   <div
     class="h-full flex flex-col bg-gradient-to-br from-lime-200 via-amber-100 to-rose-200 text-black"
   >
-    <div class="flex-1 content-scroll p-2 text-sm">
-      <label class="text-xs">Channel ID</label>
+    <div class="flex-1 content-scroll p-3 text-[12px]">
+      <label class="font-bold opacity-60">Channel ID</label>
       <input
         ref="codeRef"
         v-model="code"
-        class="w-full rounded px-2 py-1 text-sm"
+        class="mt-1 w-full rounded px-2 py-1 border focus:outline-none"
         placeholder="6 digits"
       />
       <button
         ref="submitRef"
         :disabled="loading"
-        class="mt-2 w-full bg-black/70 text-white rounded py-1 disabled:opacity-60"
+        class="mt-2 w-full bg-black/70 text-white rounded py-1 focus:opacity-50"
         @click="join"
       >
         Join
