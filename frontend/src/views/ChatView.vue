@@ -5,6 +5,7 @@ import { channelsApi } from '@/lib/api'
 import type { Channel } from '@/types/api'
 import { useAuthStore } from '@/stores/auth'
 import { useUiStore } from '@/stores/ui'
+import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -15,6 +16,7 @@ const list = ref<Channel[]>([])
 const activeIndex = ref(0)
 const listRef = ref<HTMLUListElement | null>(null)
 const itemRefs = ref<Array<HTMLElement | null>>([])
+const { t } = useI18n()
 
 async function load() {
   loading.value = true
@@ -25,7 +27,7 @@ async function load() {
     const myId = auth.user?.id
     list.value = joined.filter((c) => (myId ? String(c.ownerId) !== String(myId) : true))
   } catch (e: unknown) {
-    error.value = e instanceof Error ? e.message : 'Failed to load'
+    error.value = e instanceof Error ? e.message : t('chat.loadFailed')
   } finally {
     loading.value = false
   }
@@ -83,7 +85,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
     class="h-full flex flex-col bg-gradient-to-br from-pink-200 via-orange-200 to-yellow-200 text-white"
   >
     <div class="flex-1 p-2 overflow-auto text-sm">
-      <div v-if="loading" class="opacity-80">Loading…</div>
+      <div v-if="loading" class="opacity-80">{{ t('common.loading') }}</div>
       <div v-else-if="error" class="text-red-200">{{ error }}</div>
       <ul v-else ref="listRef" class="space-y-2">
         <li
@@ -119,7 +121,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
               aria-label="unread"
             />
         </li>
-        <li v-if="!hasAny" class="opacity-80">No joined channels yet. Join from Home.</li>
+        <li v-if="!hasAny" class="opacity-80">{{ t('chat.empty') }}</li>
       </ul>
     </div>
   </div>
