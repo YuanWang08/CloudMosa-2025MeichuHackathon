@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, ref, nextTick } from 'vue'
+import { onMounted, onBeforeUnmount, ref, nextTick, watch } from 'vue'
 import { setLocale, SUPPORT_LOCALES } from '@/i18n'
 import { useUiStore } from '@/stores/ui'
 import { useDisableMenu } from '@/composables/useDisableMenu'
+import { useI18n } from 'vue-i18n'
 
 const ui = useUiStore()
 const options = SUPPORT_LOCALES
-const active = ref(0)
+const { t, locale } = useI18n()
+const active = ref(Math.max(0, options.indexOf(locale.value as (typeof SUPPORT_LOCALES)[number])))
 const itemRefs = ref<Array<HTMLButtonElement | null>>([])
 
 useDisableMenu()
@@ -37,14 +39,23 @@ function onKey(e: KeyboardEvent) {
 
 async function choose(loc: (typeof SUPPORT_LOCALES)[number]) {
   await setLocale(loc)
+  active.value = options.indexOf(loc)
 }
 
 onMounted(() => {
   window.addEventListener('keydown', onKey)
-  nextTick(focusActive)
+  nextTick(() => {
+    active.value = Math.max(0, options.indexOf(locale.value as (typeof SUPPORT_LOCALES)[number]))
+    focusActive()
+  })
 })
 
 onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
+
+watch(locale, (val) => {
+  const idx = options.indexOf(val as (typeof SUPPORT_LOCALES)[number])
+  if (idx >= 0) active.value = idx
+})
 </script>
 
 <template>
@@ -57,13 +68,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           <button
             :ref="(el) => onItemRef(el, idx)"
             class="w-full text-left rounded px-2 py-2"
-            :class="active === idx ? 'bg-black/20' : 'bg-white/70'"
-            @click="choose(loc)"
-          >
-            {{ loc === 'en' ? 'English' : '繁體中文' }}
-          </button>
-        </li>
-      </ul>
-    </div>
+          :class="active === idx ? 'bg-black/20' : 'bg-white/70'"
+          @click="choose(loc)"
+        >
+          {{ t(`languages.${loc}`) }}
+        </button>
+      </li>
+    </ul>
   </div>
+</div>
 </template>

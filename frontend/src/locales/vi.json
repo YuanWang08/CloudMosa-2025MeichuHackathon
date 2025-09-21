@@ -1,0 +1,123 @@
+{
+  "common": {
+    "loading": "Đang tải...",
+    "yes": "Có",
+    "no": "Không"
+  },
+  "auth": {
+    "signIn": "Đăng nhập",
+    "signUp": "Đăng ký",
+    "toSignUp": "Tạo tài khoản",
+    "toSignIn": "Đã có tài khoản? Đăng nhập",
+    "username": "Tên người dùng",
+    "password": "Mật khẩu",
+    "usernamePlaceholder": "6-16 ký tự chữ, số hoặc _",
+    "passwordPlaceholder": "6-16 ký tự chữ, số hoặc _",
+    "invalidUsername": "Tên người dùng không hợp lệ",
+    "invalidPassword": "Mật khẩu không hợp lệ"
+  },
+  "menu": {
+    "join": "Tham gia kênh",
+    "create": "Tạo kênh",
+    "settings": "Cài đặt",
+    "history": "Lịch sử kênh",
+    "edit": "Chỉnh sửa kênh",
+    "remove": "Xóa kênh",
+    "leave": "Rời kênh",
+    "confirmBackDiscard": "Quay lại sẽ hủy thay đổi, tiếp tục?",
+    "confirmRemove": "Xóa kênh sẽ mất mọi lịch sử và người đăng ký sẽ không nhận tin nữa. Tiếp tục?",
+    "confirmLeave": "Bạn sẽ mất lịch sử cục bộ. Rời kênh này?",
+    "exitApp": "Thoát ứng dụng?"
+  },
+  "softkeys": {
+    "menu": "Menu",
+    "back": "Quay lại"
+  },
+  "headers": {
+    "language": "Ngôn ngữ",
+    "sms": "SMS",
+    "profile": "Hồ sơ",
+    "settings": "Cài đặt",
+    "broadcast": "Phát sóng 📢",
+    "message": "Tin nhắn 💬"
+  },
+  "settings": {
+    "language": "Ngôn ngữ",
+    "appearance": "Giao diện",
+    "defaultPage": "Trang mặc định",
+    "smsPush": "SMS Push",
+    "favoriteEmojis": "Biểu tượng yêu thích",
+    "profile": "Hồ sơ",
+    "logout": "Đăng xuất",
+    "confirmLogout": "Đăng xuất ngay?"
+  },
+  "profile": {
+    "username": "Tên người dùng",
+    "usernameHint": "Nhập 6-16 ký tự chữ, số hoặc _",
+    "save": "Lưu",
+    "changePassword": "Đổi mật khẩu",
+    "old": "Cũ",
+    "new": "Mới",
+    "confirm": "Xác nhận",
+    "update": "Cập nhật",
+    "msg": {
+      "notAuthed": "Chưa đăng nhập",
+      "invalidUsername": "Tên người dùng không hợp lệ",
+      "saved": "Đã lưu",
+      "invalidNewPassword": "Mật khẩu mới không hợp lệ",
+      "passwordNotMatch": "Mật khẩu không khớp",
+      "passwordUpdated": "Đã cập nhật mật khẩu",
+      "failed": "Thất bại",
+      "error": "Lỗi"
+    }
+  },
+  "sms": {
+    "enable": "Bật SMS",
+    "phoneNumber": "Số điện thoại",
+    "typeToFilter": "Nhập để lọc",
+    "enterNumbers": "Nhập số...",
+    "schedules": "Lịch gửi",
+    "editTime": "Chỉnh giờ",
+    "timezone": "Múi giờ",
+    "change": "Thay đổi"
+  },
+  "languages": {
+    "en": "Tiếng Anh",
+    "zh-TW": "Tiếng Trung (Phồn Thể)",
+    "vi": "Tiếng Việt"
+  },
+  "themes": {
+    "dark": "Tối",
+    "light": "Sáng"
+  },
+  "create": {
+    "template": "Mẫu",
+    "templateElder": "Mẫu người lớn tuổi",
+    "templateChild": "Mẫu trẻ em",
+    "templateCustom": "Tùy chỉnh",
+    "title": "Tên kênh",
+    "allowJoin": "Cho phép người khác tham gia",
+    "quickPlaceholder": "Phản hồi nhanh #{index} (không bắt buộc)",
+    "submit": "Tạo"
+  },
+  "chat": {
+    "loadFailed": "Không tải được danh sách kênh",
+    "empty": "Chưa tham gia kênh nào. Vào Trang chủ để tham gia."
+  },
+  "channel": {
+    "defaultTitle": "Kênh",
+    "loadFailed": "Không tải được",
+    "sentOverlay": "Đã gửi ✓",
+    "inputPlaceholder": "Nhập nội dung tin nhắn",
+    "send": "Gửi",
+    "quickTitle": "Phản hồi nhanh",
+    "quickToggleLabel": "Công tắc phản hồi nhanh",
+    "quickToggleHint": "Nhấn 0 để bật/tắt",
+    "quickOn": "Bật",
+    "quickOff": "Tắt",
+    "earlier": "Trước đó",
+    "newBadge": "MỚI",
+    "emptyMessages": "Chưa có tin nhắn nào.",
+    "done": "Xong"
+  }
+}

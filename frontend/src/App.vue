@@ -182,7 +182,7 @@ async function onKeydown(e: KeyboardEvent) {
     if (route.path.startsWith('/channel/') && ui.context.isOwner) {
       e.preventDefault()
       // 若頁面已將右軟鍵設為 Back，直接使用 onRight（立即返回）
-      if (ui.softkeys?.rightLabel === 'Back' && ui.softkeys.onRight) {
+      if (ui.softkeys?.rightLabel === t('softkeys.back') && ui.softkeys.onRight) {
         ui.softkeys.onRight()
       } else {
         // 其他情況（多半為 Send），給返回捨棄確認
@@ -353,7 +353,11 @@ async function onMenuAction({ type }: { type: string }) {
             ui.confirmOpen ? true : (ui.softkeys?.showRight ?? (!isAuthPage && !isMainPage))
           "
           :flat="isAuthPage"
-          @left="ui.softkeys?.onLeft ? ui.softkeys.onLeft() : onLeft()"
+          @left="() => {
+            if (ui.menuOpen) return
+            if (ui.softkeys?.onLeft) ui.softkeys.onLeft()
+            else onLeft()
+          }"
           @right="ui.softkeys?.onRight ? ui.softkeys.onRight() : onRight()"
         />
       </main>

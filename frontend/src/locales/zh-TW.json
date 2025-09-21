@@ -83,10 +83,41 @@
   },
   "languages": {
     "en": "English",
-    "zh-TW": "繁體中文"
+    "zh-TW": "繁體中文",
+    "vi": "越南語"
   },
   "themes": {
     "dark": "深色",
     "light": "淺色"
+  },
+  "create": {
+    "template": "模板",
+    "templateElder": "長者模板",
+    "templateChild": "孩童模板",
+    "templateCustom": "自訂",
+    "title": "頻道名稱",
+    "allowJoin": "允許其他人加入",
+    "quickPlaceholder": "快捷回覆 #{index}（可留空）",
+    "submit": "建立"
+  },
+  "chat": {
+    "loadFailed": "載入頻道失敗",
+    "empty": "尚未加入任何頻道，請從首頁加入。"
+  },
+  "channel": {
+    "defaultTitle": "頻道",
+    "loadFailed": "載入失敗",
+    "sentOverlay": "已送出 ✓",
+    "inputPlaceholder": "輸入訊息內容",
+    "send": "傳送",
+    "quickTitle": "快捷輸入",
+    "quickToggleLabel": "快捷輸入開關",
+    "quickToggleHint": "按 0 切換",
+    "quickOn": "開",
+    "quickOff": "關",
+    "earlier": "較早",
+    "newBadge": "新",
+    "emptyMessages": "目前沒有訊息。",
+    "done": "完成"
   }
 }
