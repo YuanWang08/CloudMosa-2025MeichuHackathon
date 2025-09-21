@@ -64,20 +64,30 @@ watch(
 
 function onKey(e: KeyboardEvent) {
   if (!ui.menuOpen) return
-  if (e.key === 'ArrowDown') {
+  const total = items.value.length
+  // 避免事件繼續傳遞到頁面其他鍵盤處理（例如列表 Enter 開啟頻道）
+  const stop = () => {
     e.preventDefault()
-    activeIndex.value = (activeIndex.value + 1) % items.value.length
+    e.stopPropagation()
+  }
+
+  if (e.key === 'ArrowDown') {
+    stop()
+    if (total === 0) return
+    activeIndex.value = (activeIndex.value + 1) % total
     itemRefs.value[activeIndex.value]?.focus?.()
   } else if (e.key === 'ArrowUp') {
-    e.preventDefault()
-    activeIndex.value = (activeIndex.value - 1 + items.value.length) % items.value.length
+    stop()
+    if (total === 0) return
+    activeIndex.value = (activeIndex.value - 1 + total) % total
     itemRefs.value[activeIndex.value]?.focus?.()
-  } else if (e.key === 'Enter' || e.key === 'Escape') {
-    e.preventDefault()
+  } else if (e.key === 'Enter') {
+    stop()
+    if (total === 0) return
     const it = items.value[activeIndex.value]
     if (it) onPick(it.key)
-  } else if (e.key === 'F12' || e.key === 'Backspace') {
-    e.preventDefault()
+  } else if (e.key === 'Escape' || e.key === 'F12' || e.key === 'Backspace') {
+    stop()
     ui.closeMenu()
   }
 }

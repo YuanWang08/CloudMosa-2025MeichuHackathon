@@ -88,5 +88,35 @@
   "themes": {
     "dark": "Dark",
     "light": "Light"
+  },
+  "create": {
+    "template": "Template",
+    "templateElder": "Elder Template",
+    "templateChild": "Child Template",
+    "templateCustom": "Custom",
+    "title": "Channel title",
+    "allowJoin": "Allow others to join",
+    "quickPlaceholder": "Quick reply #{index} (optional)",
+    "submit": "Create"
+  },
+  "chat": {
+    "loadFailed": "Failed to load channels",
+    "empty": "No joined channels yet. Join from Home."
+  },
+  "channel": {
+    "defaultTitle": "Channel",
+    "loadFailed": "Failed to load",
+    "sentOverlay": "Sent ✓",
+    "inputPlaceholder": "Type your message",
+    "send": "Send",
+    "quickTitle": "Quick",
+    "quickToggleLabel": "Quick Input Switch",
+    "quickToggleHint": "Press 0 to toggle",
+    "quickOn": "ON",
+    "quickOff": "OFF",
+    "earlier": "Earlier",
+    "newBadge": "NEW",
+    "emptyMessages": "No messages yet.",
+    "done": "Done"
   }
 }

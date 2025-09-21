@@ -12,7 +12,7 @@ const route = useRoute()
 const router = useRouter()
 const ui = useUiStore()
 const auth = useAuthStore()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const channelId = ref<string>(String(route.params.id))
 const loading = ref(true)
 const error = ref<string | null>(null)
@@ -212,7 +212,7 @@ async function load() {
       } catch {}
     }
   } catch (e: unknown) {
-    error.value = e instanceof Error ? e.message : 'Failed to load'
+    error.value = e instanceof Error ? e.message : t('channel.loadFailed')
   } finally {
     loading.value = false
     await nextTick()
@@ -272,7 +272,7 @@ function updateSoftkeys() {
   }
   // 擁有者：RSK 一律為 Back；若有輸入內容則詢問捨棄
   ui.setSoftkeys({
-    leftLabel: isEditing.value ? 'Done' : 'Menu',
+    leftLabel: isEditing.value ? t('channel.done') : t('softkeys.menu'),
     showLeft: true,
     onLeft: () => {
       if (isEditing.value) {
@@ -281,7 +281,7 @@ function updateSoftkeys() {
         ui.openMenu()
       }
     },
-    rightLabel: 'Back',
+    rightLabel: t('softkeys.back'),
     showRight: true,
     onRight: async () => {
       if (input.value.trim().length > 0) {
@@ -304,6 +304,7 @@ watch(
 
 // 監聽輸入與 owner 狀態變化，動態更新軟鍵
 watch([input, isOwnerRef, isEditing], () => updateSoftkeys())
+watch(locale, () => updateSoftkeys())
 
 function onKey(e: KeyboardEvent) {
   if (ui.confirmOpen || ui.menuOpen) return
@@ -473,19 +474,19 @@ onBeforeUnmount(() => {
         >
       </div>
       <div class="min-w-0">
-        <div class="font-semibold truncate">{{ ch?.title || 'Channel' }}</div>
+        <div class="font-semibold truncate">{{ ch?.title || t('channel.defaultTitle') }}</div>
         <div class="opacity-90 text-[11px] truncate">{{ ownerUsername }}</div>
       </div>
     </div>
     <div class="flex-1 p-2 pt-0 text-sm flex flex-col gap-2 overflow-hidden">
-      <div v-if="loading" class="opacity-80">Loading…</div>
+      <div v-if="loading" class="opacity-80">{{ t('common.loading') }}</div>
       <div v-else-if="error" class="text-red-200">{{ error }}</div>
       <template v-else>
         <div
           v-if="sentOverlay"
           class="absolute inset-0 z-20 flex items-center justify-center bg-black/70 text-white text-lg"
         >
-          Sent ✓
+          {{ t('channel.sentOverlay') }}
         </div>
         <!-- 擁有者：顯示輸入與快捷鍵 -->
         <template v-if="isOwnerRef">
@@ -494,7 +495,7 @@ onBeforeUnmount(() => {
             v-model="input"
             class="w-full rounded border-2 border-white/80 bg-white/95 p-2 text-sm text-black shadow-sm focus:ring-1"
             rows="3"
-            placeholder="Type your message"
+            :placeholder="t('channel.inputPlaceholder')"
           />
           <button
             :disabled="sending || !input.trim()"
@@ -502,11 +503,11 @@ onBeforeUnmount(() => {
             @click="send()"
             ref="sendBtnRef"
           >
-            Send
+            {{ t('channel.send') }}
           </button>
 
           <div class="mt-1">
-            <div class="text-xs opacity-90">Quick</div>
+            <div class="text-xs opacity-90">{{ t('channel.quickTitle') }}</div>
             <div class="grid grid-cols-6 gap-1 mt-1">
               <button
                 v-for="(q, idx) in quickEmojis"
@@ -537,16 +538,16 @@ onBeforeUnmount(() => {
             </div>
             <!-- Quick Input Switch -->
             <div class="mt-2 text-[11px] flex items-center justify-between">
-              <div class="opacity-90">Quick Input Switch</div>
+              <div class="opacity-90">{{ t('channel.quickToggleLabel') }}</div>
               <div class="flex items-center gap-2">
                 <span
                   :class="
                     quickInputEnabled ? 'bg-green-400 text-black' : 'bg-red-400 text-white'
                   "
                   class="rounded px-2 py-0.5"
-                  >{{ quickInputEnabled ? 'ON' : 'OFF' }}</span
+                  >{{ quickInputEnabled ? t('channel.quickOn') : t('channel.quickOff') }}</span
                 >
-                <span class="opacity-80">Press 0 to toggle</span>
+                <span class="opacity-80">{{ t('channel.quickToggleHint') }}</span>
               </div>
             </div>
           </div>
@@ -562,7 +563,7 @@ onBeforeUnmount(() => {
                 class="text-[10px] uppercase tracking-wide text-white/80 flex items-center gap-2"
               >
                 <span class="flex-1 h-px bg-white/40" />
-                <span>Earlier</span>
+                <span>{{ t('channel.earlier') }}</span>
                 <span class="flex-1 h-px bg-white/40" />
               </div>
 
@@ -584,7 +585,7 @@ onBeforeUnmount(() => {
                 <span
                   v-if="idx < unreadCountRef"
                   class="absolute top-1 right-1 bg-amber-400 text-black text-[10px] rounded px-1 py-0.5"
-                  >NEW</span
+                  >{{ t('channel.newBadge') }}</span
                 >
                 <!-- 播放中進度條與狀態 -->
                 <div
@@ -613,7 +614,7 @@ onBeforeUnmount(() => {
                 </div>
               </div>
             </div>
-            <div v-if="msgs.length === 0" class="opacity-80">No messages yet.</div>
+            <div v-if="msgs.length === 0" class="opacity-80">{{ t('channel.emptyMessages') }}</div>
             <div v-if="errorMsg" class="text-red-200 text-xs">{{ errorMsg }}</div>
           </div>
         </template>

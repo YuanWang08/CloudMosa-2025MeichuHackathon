@@ -29,15 +29,15 @@ const submitRef = ref<HTMLButtonElement | null>(null)
 const templateOptions = [
   {
     key: 'elder',
-    label: 'Elder Template',
+    labelKey: 'create.templateElder',
     quickReplies: ['已吃藥，身體無異狀', '我很好，請放心', '我找不到我的藥'],
   },
   {
     key: 'child',
-    label: 'Child Template',
+    labelKey: 'create.templateChild',
     quickReplies: ['我到學校了！', '我到家了！', '爸比媽咪救我！'],
   },
-  { key: 'custom', label: 'Custom', quickReplies: ['', '', ''] },
+  { key: 'custom', labelKey: 'create.templateCustom', quickReplies: ['', '', ''] },
 ]
 
 const templateRefs = templateOptions.map(() => ref<HTMLButtonElement | null>(null))
@@ -61,6 +61,11 @@ function applyTemplate(key: string) {
   qr1.value = q1 || ''
   qr2.value = q2 || ''
   qr3.value = q3 || ''
+}
+
+function handleTemplateFocus(idx: number, key: string) {
+  focusIndex.value = idx
+  if (selectedTemplate.value !== key) applyTemplate(key)
 }
 
 function focusAt(i: number) {
@@ -161,7 +166,7 @@ async function createChannel() {
   >
     <div class="flex-1 content-scroll p-2 text-sm space-y-2">
       <div>
-        <div class="text-sm opacity-80 mt-1">Template</div>
+        <div class="text-sm opacity-80 mt-1">{{ $t('create.template') }}</div>
         <div class="flex gap-2 mt-1">
           <button
             v-for="(tpl, idx) in templateOptions"
@@ -174,41 +179,41 @@ async function createChannel() {
                 : 'bg-white/60 text-black/80 border-transparent'
             "
             @click="applyTemplate(tpl.key)"
-            @focus="() => { focusIndex = idx; applyTemplate(tpl.key); }"
-              >
-            {{ tpl.label }}
+            @focus="handleTemplateFocus(idx, tpl.key)"
+          >
+            {{ $t(tpl.labelKey) }}
           </button>
         </div>
       </div>
-      <label class="text-sm opacity-80">Title</label>
+      <label class="text-xs">{{ $t('create.title') }}</label>
       <input
         ref="titleRef"
         v-model="title"
         class="w-full border rounded px-2 py-1 text-xs text-black"
-        placeholder="Channel title"
+        :placeholder="$t('create.title')"
       />
-      <label class="flex items-center gap-1 text-black/70 text-[10px]">
-        <input ref="allowRef" type="checkbox" v-model="allowJoin" /> Allow others to join
+      <label class="flex items-center gap-2 text-xs">
+        <input ref="allowRef" type="checkbox" v-model="allowJoin" /> {{ $t('create.allowJoin') }}
       </label>
       <div>
         <div class="text-sm opacity-80 mt-2">Quick replies</div>
         <input
           ref="qr1Ref"
           v-model="qr1"
-          class="w-full border rounded px-2 py-1 text-xs text-black mt-1"
-          placeholder="Quick reply #1 (optional)"
+          class="w-full rounded px-2 py-1 text-sm text-black mt-1"
+          :placeholder="$t('create.quickPlaceholder', { index: 1 })"
         />
         <input
           ref="qr2Ref"
           v-model="qr2"
-          class="w-full border rounded px-2 py-1 text-xs text-black mt-1"
-          placeholder="Quick reply #2 (optional)"
+          class="w-full rounded px-2 py-1 text-sm text-black mt-1"
+          :placeholder="$t('create.quickPlaceholder', { index: 2 })"
         />
         <input
           ref="qr3Ref"
           v-model="qr3"
-          class="w-full border rounded px-2 py-1 text-xs text-black mt-1"
-          placeholder="Quick reply #3 (optional)"
+          class="w-full rounded px-2 py-1 text-sm text-black mt-1"
+          :placeholder="$t('create.quickPlaceholder', { index: 3 })"
         />
       </div>
       <button
@@ -217,7 +222,7 @@ async function createChannel() {
         class="w-full bg-[#8E8E8E] text-white rounded py-1 focus:opacity-60"
         @click="createChannel"
       >
-        Create
+        {{ $t('create.submit') }}
       </button>
       <div v-if="error" class="text-rose-600">{{ error }}</div>
     </div>
