@@ -1,7 +1,7 @@
 // src/i18n.ts
 import { createI18n } from 'vue-i18n'
 
-export const SUPPORT_LOCALES = ['en', 'zh-TW'] as const
+export const SUPPORT_LOCALES = ['en', 'zh-TW', 'vi'] as const
 type Locale = (typeof SUPPORT_LOCALES)[number]
 
 function detectLocale(): Locale {
