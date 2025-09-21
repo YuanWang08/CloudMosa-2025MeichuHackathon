@@ -184,15 +184,15 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    class="h-full flex flex-col bg-gradient-to-br from-pink-200 via-orange-200 to-yellow-200 text-white"
+    class="h-full flex flex-col bg-gradient-to-br from-pink-200 via-orange-200 to-yellow-200 text-black/80"
   >
-    <div class="p-2 text-xs opacity-90">
+    <div class="p-2 text-sm opacity-90">
       <div class="font-semibold truncate">{{ chTitle || 'Channel' }}</div>
-      <div>
+      <div class="pl-2 text-xs">
         Code: <span class="font-mono">{{ chCode || '------' }}</span>
       </div>
     </div>
-    <div ref="listRef" tabindex="0" class="flex-1 content-scroll p-2 pt-0 text-sm outline-none">
+    <div ref="listRef" tabindex="0" class="mt-1 flex-1 content-scroll p-2 pt-0 text-sm outline-none">
       <div v-if="loading" class="opacity-80">Loading…</div>
       <div v-else-if="error" class="text-red-200">{{ error }}</div>
       <div v-else class="space-y-3">
@@ -201,7 +201,7 @@ onBeforeUnmount(() => {
           :key="m.id"
           :ref="itemRefSetter(idx)"
           class="relative rounded px-2 py-2 leading-[1.35] break-words"
-          :class="['bg-white/15', selectedIdx === idx ? 'ring-2 ring-white/70' : 'ring-0']"
+          :class="['bg-white/50', selectedIdx === idx ? 'ring-1 ring-black/50' : 'ring-0']"
         >
           <div class="opacity-75 text-[10px] mb-0.5">
             {{ new Date(m.createdAt).toLocaleString() }}
